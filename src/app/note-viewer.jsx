@@ -6,7 +6,7 @@ export default function NoteViewer({
     const images = rhythmList.map((rhythm, index) => (
       <Image
         key={`image-${index}`}
-        src={`/notes/${rhythm.noteValue}.png`}
+        src={`${process.env.IMAGE_PATH}/notes/${rhythm.noteValue}.png`}
         alt='Text'
         width={50}
         height={100}
