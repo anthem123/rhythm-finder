@@ -26,6 +26,9 @@ export default function Home() {
   }
 
   const getNoteValue = (duration) => {
+    if (tempo === undefined) {
+      return 'null';
+    }
     const quarterNoteMs = 60000/tempo;
     console.log(`Quarter Note ms = ${quarterNoteMs}`)
 
