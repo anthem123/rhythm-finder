@@ -1,13 +1,15 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Metronome from './metronome'
+import Metronome from './metronome';
+import NoteViewer from './note-viewer';
 
 export default function Home() {
   const [tempo, setTempo] = useState();
   const [metronomeOn, setMetronomeOn] = useState(false);
   const [metronomeText, setMetronomeText] = useState('Start Metronome');
-  const [rhythm, setRhythm] = useState([]);
+  const [rhythm, setRhythm] = useState<any[]>([]);
+  const [newRhythm, setNewRhythm] = useState(true);
 
   const startMetronome = () => {
     if (metronomeOn) {
@@ -23,7 +25,7 @@ export default function Home() {
     setTempo(textBox.target.value);
   }
 
-  const getNoteValue = duration => {
+  const getNoteValue = (duration) => {
     const quarterNoteMs = 60000/tempo;
     console.log(`Quarter Note ms = ${quarterNoteMs}`)
 
@@ -36,34 +38,40 @@ export default function Home() {
     } else if (duration >= quarterNoteMs * .8 && duration <= quarterNoteMs * 1.2) {
       return 'quarter';
     } else if (duration >= quarterNoteMs * .75 * .8 && duration <= quarterNoteMs * .75 * 1.2) {
-      return 'dotted-eigth'
-    }  else if (duration >= quarterNoteMs/2 * .8 && duration <= quarterNoteMs/2 * 1.2) {
-      return 'eigth'
-    } else if (duration >= quarterNoteMs/4 * .8 && duration <= quarterNoteMs/4 * 1.2) {
+      return 'dotted-eighth'
+    }  else if (duration >= quarterNoteMs *.5 * .8 && duration <= quarterNoteMs * .5 * 1.2) {
+      return 'eighth'
+    } else if (duration >= quarterNoteMs * .25 * .8 && duration <= quarterNoteMs * .25 * 1.2) {
       return 'sixteenth'
     }
     return 'other';
   }
 
   const addRhythm = () => {
-    if (rhythm.length === 0) {
+    if (newRhythm) {
       setRhythm([
-        ...rhythm,
         { start: new Date().getTime(), diff: 0, noteValue: "quarter" }
       ]);
+      setNewRhythm(false);
     } else {
       const newTime = new Date().getTime();
       const prevNote = rhythm[rhythm.length - 1];
       const diff = newTime - prevNote.start;
-      rhythm[rhythm.length - 1].diff = diff;
-      rhythm[rhythm.length - 1].noteValue = getNoteValue(diff);
+      prevNote.diff = diff;
+      prevNote.noteValue = getNoteValue(diff);
       setRhythm([
         ...rhythm,
-        { start: newTime }
+        { start: newTime, diff: 0, noteValue: "quarter" }
       ]);
     }
     
     console.log(rhythm);
+  }
+
+  const finishRhythm = () => {
+    setMetronomeOn(false);
+    setMetronomeText("Start Metronome");
+    setNewRhythm(true);
   }
 
   return (
@@ -77,9 +85,12 @@ export default function Home() {
         metronomeOn={metronomeOn}
         tempo={tempo}
       />
+      <NoteViewer
+        rhythmList={rhythm}
+      />
       <div>
         <button className="border-black border-2 m-4 p-2" onClick={addRhythm}>Tap</button>
-        <button className="border-black border-2 m-4 p-2">Finish</button>
+        <button className="border-black border-2 m-4 p-2" onClick={finishRhythm}>Finish</button>
       </div>
     </main>
   )

@@ -12,6 +12,7 @@ export default function Metronome({
       width: '100px',
       height: '100px',
       backgroundColor: '#000000',
+      border: 'grey 1px solid',
       '-webkit-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
       '-moz-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
       '-o-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
