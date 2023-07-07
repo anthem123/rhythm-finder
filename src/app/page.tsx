@@ -31,7 +31,7 @@ export default function Home() {
     if (tempo === undefined) {
       return 'null';
     }
-    const quarterNoteMs = 60000/tempo;
+    const quarterNoteMs = 60000/parseInt(tempo);
     console.log(`Quarter Note ms = ${quarterNoteMs}`)
 
     if (duration >= quarterNoteMs * 4 * .8 && duration <= quarterNoteMs * 4 * 1.2) {
