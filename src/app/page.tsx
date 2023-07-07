@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Metronome from './metronome';
 import NoteViewer from './note-viewer';
+import TempoSlider from './tempo-slider';
 
 export default function Home() {
-  const [tempo, setTempo] = useState();
+  const [tempo, setTempo] = useState('100');
   const [metronomeOn, setMetronomeOn] = useState(false);
   const [metronomeText, setMetronomeText] = useState('Start Metronome');
   const [rhythm, setRhythm] = useState<any[]>([]);
@@ -78,6 +79,10 @@ export default function Home() {
         <h1>Set Your Tempo (bpm)</h1>
         <input className="tempo-input" value={tempo} onChange={onTempoChange}></input>
         <button className="clickable-button" onClick={toggleMetronome}>{metronomeText}</button>
+        <TempoSlider
+          tempo={tempo}
+          setTempo={setTempo}
+        />
       </div>
       <Metronome
         metronomeOn={metronomeOn}

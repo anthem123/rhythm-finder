@@ -64,7 +64,7 @@ body {
 .tempo-input {
   padding: 0.5rem;
   width: 3rem;
-  background-color: #555555;
+  background-color: whitesmoke;
   border-radius: 0.25rem;
 }
 
@@ -80,6 +80,10 @@ body {
   }
 
   .clickable-button:hover {
+    background-color: #555555;
+  }
+
+  .tempo-input {
     background-color: #555555;
   }
 }
