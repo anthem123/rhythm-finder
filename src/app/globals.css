@@ -8,14 +8,6 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -72,4 +64,22 @@ body {
 .tempo-input {
   padding: 0.5rem;
   width: 3rem;
+  background-color: #555555;
+  border-radius: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 40, 40, 40;
+    --background-end-rgb: 20, 20, 20;
+  }
+  
+  .clickable-button {
+    border: 1px white solid;
+  }
+
+  .clickable-button:hover {
+    background-color: #555555;
+  }
 }
