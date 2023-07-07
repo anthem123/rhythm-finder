@@ -1,3 +1,5 @@
+
+
 export default function Metronome({
   metronomeOn,
   tempo
@@ -18,6 +20,15 @@ export default function Metronome({
       '-o-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
       '-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
     });
+    if (msTempo !== 0) {
+      return (
+        <div style={createMetStyle(metronomeOn)}>
+          <audio id="met">
+            <source src="/rhythm-finder/metronome.mp3"/>
+          </audio>
+        </div>
+      )
+    }
     return (
       <div style={createMetStyle(metronomeOn)}></div>
     )

@@ -11,13 +11,14 @@ export default function Home() {
   const [rhythm, setRhythm] = useState<any[]>([]);
   const [newRhythm, setNewRhythm] = useState(true);
 
-  const startMetronome = () => {
+  const toggleMetronome = () => {
     if (metronomeOn) {
       setMetronomeOn(false);
       setMetronomeText("Start Metronome");
+      setNewRhythm(true);
     } else {
       setMetronomeOn(true);
-      setMetronomeText("Stop Metronome");
+      setMetronomeText("Finish");
     }
   }
 
@@ -71,18 +72,12 @@ export default function Home() {
     console.log(rhythm);
   }
 
-  const finishRhythm = () => {
-    setMetronomeOn(false);
-    setMetronomeText("Start Metronome");
-    setNewRhythm(true);
-  }
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>
         <h1>Set Your Tempo (bpm)</h1>
-        <input value={tempo} onChange={onTempoChange}></input>
-        <button onClick={startMetronome}>{metronomeText}</button>
+        <input className="tempo-input" value={tempo} onChange={onTempoChange}></input>
+        <button className="clickable-button" onClick={toggleMetronome}>{metronomeText}</button>
       </div>
       <Metronome
         metronomeOn={metronomeOn}
@@ -92,8 +87,7 @@ export default function Home() {
         rhythmList={rhythm}
       />
       <div>
-        <button className="border-black border-2 m-4 p-2" onClick={addRhythm}>Tap</button>
-        <button className="border-black border-2 m-4 p-2" onClick={finishRhythm}>Finish</button>
+        <button className="clickable-button tap-input-button" onClick={addRhythm}>Tap Rhythm Here!</button>
       </div>
     </main>
   )

@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 226, 231, 232;
   --background-end-rgb: 255, 255, 255;
 }
 
@@ -45,4 +45,31 @@ body {
   0%   { opacity:1; }
   50%  { opacity:0; }
   100% { opacity:1; }
+}
+
+.tap-input-button {
+  width: 15rem;
+  height: 5rem;
+}
+
+.clickable-button {
+  padding: 0.5rem;
+  border: 1px black solid;
+  border-radius: 0.25rem;
+  margin: 1rem;
+}
+
+.clickable-button:hover {
+  background-color: darkgray;
+  color: whitesmoke;
+}
+
+.clickable-button:active {
+  background-color: whitesmoke;
+  color: black;
+}
+
+.tempo-input {
+  padding: 0.5rem;
+  width: 3rem;
 }
