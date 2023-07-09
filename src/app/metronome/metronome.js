@@ -65,31 +65,32 @@ function scheduler() {
 }
 
 const play = (newTempo) => {
-    if (!audioContext) {
-      audioContext = new AudioContext();
-    }
+  console.log('PLAY');
+  if (!audioContext) {
+    audioContext = new AudioContext();
+  }
 
-    if (!unlocked) {
-      // play silent buffer to unlock the audio
-      var buffer = audioContext.createBuffer(1, 1, 22050);
-      var node = audioContext.createBufferSource();
-      node.buffer = buffer;
-      node.start(0);
-      unlocked = true;
-    }
+  if (!unlocked) {
+    // play silent buffer to unlock the audio
+    var buffer = audioContext.createBuffer(1, 1, 22050);
+    var node = audioContext.createBufferSource();
+    node.buffer = buffer;
+    node.start(0);
+    unlocked = true;
+  }
 
-    isPlaying = !isPlaying;
+  isPlaying = !isPlaying;
 
-    if (isPlaying) { // start playing
-      current16thNote = 0;
-      nextNoteTime = audioContext.currentTime;
-      tempo = newTempo;
-      timerWorker.postMessage("start");
-      return "stop";
-    } else {
-      // timerWorker.postMessage("stop");
-      return "play";
-    }
+  if (isPlaying) { // start playing
+    current16thNote = 0;
+    nextNoteTime = audioContext.currentTime;
+    tempo = newTempo;
+    timerWorker.postMessage("start");
+    return "stop";
+  } else {
+    // timerWorker.postMessage("stop");
+    return "play";
+  }
 }
 
 const stop = () => {
