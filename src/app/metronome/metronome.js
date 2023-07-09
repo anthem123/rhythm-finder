@@ -104,7 +104,7 @@ const stop = () => {
 const init = basePath => {
   console.log('init!');
   if (timerWorker === null) {
-    console.log('Create worker');
+    console.log(`Create worker: ${basePath}/metronome-worker.js`);
     timerWorker = new Worker(`${basePath}/metronome-worker.js`);
     console.log(timerWorker);
     timerWorker.onmessage = function(e) {
