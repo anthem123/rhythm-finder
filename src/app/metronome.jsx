@@ -1,9 +1,14 @@
-
+import React, { useState, useEffect } from 'react';
+import metronome from './metronome/metronome'
 
 export default function Metronome({
   metronomeOn,
   tempo
   }) {
+    useEffect(() => {
+      // call api or anything
+      metronome.init();
+    });
     let msTempo;
     if (tempo) {
       msTempo = 60000/tempo;
@@ -20,6 +25,12 @@ export default function Metronome({
       '-o-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
       '-animation': metronomeOn ? `flickerAnimation ${msTempo}ms infinite` : '',
     });
+
+    if (metronomeOn) {
+      metronome.play(tempo);
+    } else {
+      metronome.stop();
+    }
     if (msTempo !== 0) {
       return (
         <div style={createMetStyle(metronomeOn)}>

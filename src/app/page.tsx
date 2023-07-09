@@ -82,6 +82,8 @@ export default function Home() {
         <TempoSlider
           tempo={tempo}
           setTempo={setTempo}
+          setMetronomeOn={setMetronomeOn}
+          toggleMetronome={toggleMetronome}
         />
       </div>
       <Metronome

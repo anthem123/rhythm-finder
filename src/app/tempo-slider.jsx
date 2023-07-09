@@ -1,12 +1,20 @@
+import metronome from './metronome/metronome'
+
 export default function TempoSlider({
   tempo,
   setTempo,
+  setMetronomeOn,
+  toggleMetronome
 }) {
 
   const lowerTempo = () => {
+    setMetronomeOn(false);
+    toggleMetronome();
     setTempo(parseInt(tempo) - 1);
   }
   const raiseTempo = () => {
+    setMetronomeOn(false);
+    toggleMetronome();
     setTempo(parseInt(tempo) + 1);
   }
 
@@ -23,7 +31,11 @@ export default function TempoSlider({
         type="range"
         min={min}
         max={max}
-        onChange={(e) => setTempo(e.target.value)}
+        onChange={(e) => {
+          setMetronomeOn(false);
+          toggleMetronome();
+          setTempo(e.target.value);
+        }}
         style={getBackgroundSize()}
         value={tempo}
       />
