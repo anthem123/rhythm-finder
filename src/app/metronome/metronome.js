@@ -100,16 +100,18 @@ const stop = () => {
 }
 
 const init = basePath => {
-    if (timerWorker === null) {
-      console.log('Create worker');
-      timerWorker = new Worker(`${basePath}/metronome-worker.js`);
-      timerWorker.onmessage = function(e) {
-          if (e.data == "tick") {
-              scheduler();
-          }
-      };
-      timerWorker.postMessage({"interval":lookahead});
-    }
+  console.log('init!');
+  if (timerWorker === null) {
+    console.log('Create worker');
+    timerWorker = new Worker(`${basePath}/metronome-worker.js`);
+    timerWorker.onmessage = function(e) {
+      if (e.data == "tick") {
+        console.log('Start scheduler');
+        scheduler();
+      }
+    };
+    timerWorker.postMessage({"interval":lookahead});
+  }
 }
 
 export default { init, play, stop }
