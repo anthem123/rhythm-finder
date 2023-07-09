@@ -66,6 +66,7 @@ function scheduler() {
 
 const play = (newTempo) => {
   console.log('PLAY');
+  console.log(timerWorker);
   if (!audioContext) {
     audioContext = new AudioContext();
   }
@@ -105,6 +106,7 @@ const init = basePath => {
   if (timerWorker === null) {
     console.log('Create worker');
     timerWorker = new Worker(`${basePath}/metronome-worker.js`);
+    console.log(timerWorker);
     timerWorker.onmessage = function(e) {
       if (e.data == "tick") {
         console.log('Start scheduler');
