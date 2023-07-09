@@ -25,4 +25,5 @@ self.onmessage=function(e){
 	}
 };
 
+console.log('Worker started');
 postMessage('hi there');
