@@ -3,7 +3,7 @@ import Image from 'next/image'
 export default function NoteViewer({
   rhythmList
   }) {
-    const basePath = process.env.IMAGE_PATH === undefined ? '/rhythm-finder' : process.env.IMAGE_PATH;
+    const basePath = process.env.RESOURCE_PATH === undefined ? '/rhythm-finder' : process.env.RESOURCE_PATH;
     const images = rhythmList
       .filter(rhythm => rhythm.noteValue !== 'null')
       .map((rhythm, index) => (

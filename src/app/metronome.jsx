@@ -7,7 +7,8 @@ export default function Metronome({
   }) {
     useEffect(() => {
       // call api or anything
-      metronome.init();
+      const basePath = process.env.RESOURCE_PATH === undefined ? '/rhythm-finder' : process.env.RESOURCE_PATH;
+      metronome.init(basePath);
     });
     let msTempo;
     if (tempo) {

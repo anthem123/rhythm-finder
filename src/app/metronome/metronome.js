@@ -99,10 +99,10 @@ const stop = () => {
   }
 }
 
-const init = () => {
+const init = basePath => {
     if (timerWorker === null) {
       console.log('Create worker');
-      timerWorker = new Worker("rhythm-finder/metronome-worker.js");
+      timerWorker = new Worker(`${basePath}/metronome-worker.js`);
       timerWorker.onmessage = function(e) {
           if (e.data == "tick") {
               scheduler();
