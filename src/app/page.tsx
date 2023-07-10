@@ -4,22 +4,26 @@ import React, { useState, useEffect } from 'react';
 import Metronome from './metronome';
 import NoteViewer from './note-viewer';
 import TempoSlider from './tempo-slider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
+  const playIcon = <FontAwesomeIcon icon={faPlay} />;
+  const pauseIcon = <FontAwesomeIcon icon={faPause} />;
   const [tempo, setTempo] = useState('100');
   const [metronomeOn, setMetronomeOn] = useState(false);
-  const [metronomeText, setMetronomeText] = useState('Start Metronome');
+  const [metronomeText, setMetronomeText] = useState(playIcon);
   const [rhythm, setRhythm] = useState<any[]>([]);
   const [newRhythm, setNewRhythm] = useState(true);
 
   const toggleMetronome = () => {
     if (metronomeOn) {
       setMetronomeOn(false);
-      setMetronomeText("Start Metronome");
+      setMetronomeText(playIcon);
       setNewRhythm(true);
     } else {
       setMetronomeOn(true);
-      setMetronomeText("Finish");
+      setMetronomeText(pauseIcon);
     }
   }
 
