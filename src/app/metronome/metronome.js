@@ -87,10 +87,7 @@ const play = (newTempo) => {
     nextNoteTime = audioContext.currentTime;
     tempo = newTempo;
     timerWorker.postMessage("start");
-    return "stop";
-  } else {
-    // timerWorker.postMessage("stop");
-    return "play";
+    // return "stop";
   }
 }
 
