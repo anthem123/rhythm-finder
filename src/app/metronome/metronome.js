@@ -80,7 +80,9 @@ const play = (newTempo) => {
     unlocked = true;
   }
 
+  console.log(`isCurrentlyPlaying = ${isPlaying}`);
   isPlaying = !isPlaying;
+  console.log(`isPlaying = ${isPlaying}`);
 
   if (isPlaying) { // start playing
     console.log('Reset current16thNote');
