@@ -83,9 +83,13 @@ const play = (newTempo) => {
   isPlaying = !isPlaying;
 
   if (isPlaying) { // start playing
+    console.log('Reset current16thNote');
     current16thNote = 0;
+    console.log('Reset Currenttime');
     nextNoteTime = audioContext.currentTime;
+    console.log('Reset Tempo');
     tempo = newTempo;
+    console.log('Actually Start');
     timerWorker.postMessage("start");
     // return "stop";
   }
