@@ -1,40 +1,44 @@
-import metronome from './metronome/metronome'
+import metronome from './metronome/metronome-util'
 
 export default function TempoSlider({
   tempo,
   setTempo,
-  setMetronomeOn,
+  metronomeOn,
   toggleMetronome
 }) {
 
+  const changeTempo = tempo => {
+    if (metronomeOn) {
+      toggleMetronome();
+    }
+    setTempo(tempo);
+  }
+
   const lowerTempo = () => {
-    setMetronomeOn(false);
-    toggleMetronome();
-    setTempo(parseInt(tempo) - 1);
+    changeTempo(parseInt(tempo) - 1);
   }
   const raiseTempo = () => {
-    setMetronomeOn(false);
-    toggleMetronome();
-    setTempo(parseInt(tempo) + 1);
+    changeTempo(parseInt(tempo) + 1);
   }
 
   const min = 40;
   const max = 220;
   const getBackgroundSize = () => {
-    return { backgroundSize: `${((parseInt(tempo) - 40) * 100) / (max - min)}% 100%` };
+    return { 
+      backgroundSize: `${((parseInt(tempo) - 40) * 100) / (max - min)}% 100%`,
+      maxWidth: '8rem',
+    };
   };
 
   return (
-    <div>
+    <div className='slider-holder'>
       <button className="slider-button" onClick={lowerTempo}>-</button>
       <input
         type="range"
         min={min}
         max={max}
         onChange={(e) => {
-          setMetronomeOn(false);
-          toggleMetronome();
-          setTempo(e.target.value);
+          changeTempo(e.target.value);
         }}
         style={getBackgroundSize()}
         value={tempo}

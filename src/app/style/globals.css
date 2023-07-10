@@ -39,6 +39,10 @@ body {
   100% { opacity:1; }
 }
 
+.main-container {
+  margin: auto;
+}
+
 .tap-input-button {
   width: 15rem;
   height: 5rem;
@@ -61,11 +65,19 @@ body {
   color: black;
 }
 
-.tempo-input {
+.tempo-display {
+  display: flex;
+  justify-content: center;
+}
+
+.tempo-text {
   padding: 0.5rem;
-  width: 3rem;
-  background-color: whitesmoke;
-  border-radius: 0.25rem;
+  font-size: 4rem;
+}
+
+.tempo-bpm {
+  position: relative;
+  top: 60px;
 }
 
 @media (prefers-color-scheme: dark) {

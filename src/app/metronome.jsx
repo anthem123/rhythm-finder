@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import metronome from './metronome/metronome'
+import metronomeUtil from './metronome/metronome-util'
 
 export default function Metronome({
   metronomeOn,
@@ -8,7 +8,7 @@ export default function Metronome({
     useEffect(() => {
       // call api or anything
       const basePath = process.env.RESOURCE_PATH === undefined ? '/rhythm-finder' : process.env.RESOURCE_PATH;
-      metronome.init(basePath);
+      metronomeUtil.init(basePath);
     });
     let msTempo;
     if (tempo) {
@@ -28,9 +28,9 @@ export default function Metronome({
     });
 
     if (metronomeOn) {
-      metronome.play(tempo);
+      metronomeUtil.play(tempo);
     } else {
-      metronome.stop();
+      metronomeUtil.stop();
     }
     if (msTempo !== 0) {
       return (

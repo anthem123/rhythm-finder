@@ -1,3 +1,7 @@
+.slider-holder {
+  max-width: 16rem;
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   height: 7px;
