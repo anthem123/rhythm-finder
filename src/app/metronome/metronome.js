@@ -80,27 +80,21 @@ const play = (newTempo) => {
     unlocked = true;
   }
 
-  console.log(`isCurrentlyPlaying = ${isPlaying}`);
-  isPlaying = !isPlaying;
-  console.log(`isPlaying = ${isPlaying}`);
-
-  if (isPlaying) { // start playing
-    console.log('Reset current16thNote');
+  if (!isPlaying) {
+    isPlaying = true;
     current16thNote = 0;
-    console.log('Reset Currenttime');
     nextNoteTime = audioContext.currentTime;
-    console.log('Reset Tempo');
     tempo = newTempo;
-    console.log('Actually Start');
     timerWorker.postMessage("start");
-    // return "stop";
   }
 }
 
 const stop = () => {
-  isPlaying = !isPlaying;
-  if (timerWorker && !isPlaying) {
-    timerWorker.postMessage('stop');
+  if (isPlaying) {
+    isPlaying = false;
+    if (timerWorker && !isPlaying) {
+      timerWorker.postMessage('stop');
+    }
   }
 }
 
