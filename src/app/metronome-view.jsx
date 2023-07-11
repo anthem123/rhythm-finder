@@ -30,6 +30,12 @@ export default function Metronome({
       }
     }
 
+    if (metronomeOn) {
+      metronomeUtil.play(tempo);
+    } else {
+      metronomeUtil.stop();
+    }
+
     let msTempo;
     if (tempo) {
       msTempo = 60000/tempo;
@@ -37,11 +43,12 @@ export default function Metronome({
       msTempo = 0;
     }
 
-    if (metronomeOn) {
-      metronomeUtil.play(tempo);
-    } else {
-      metronomeUtil.stop();
-    }
+    const animationStyle = metronomeOn ? {
+      '-webkit-animation': `pulse ${msTempo}ms infinite`,
+      '-moz-animation': `pulse ${msTempo}ms infinite`,
+      '-o-animation': `pulse ${msTempo}ms infinite`,
+      '-animation': `pulse ${msTempo}ms infinite`,
+    } : {};
     
     return (
       <div>
@@ -49,16 +56,16 @@ export default function Metronome({
           <p className='tempo-text'>{tempo}</p>
           <p className='tempo-bpm'>BPM</p>
         </div>
-        <div>
-          <button className='clickable-button' onClick={toggleMetronome}>{metronomeText}</button>
-          <button className='clickable-button'>Tap for Tempo</button>
-        </div>
         <TempoSlider
           tempo={tempo}
           setTempo={setTempo}
           metronomeOn={metronomeOn}
           toggleMetronome={toggleMetronome}
         />
+        <div>
+          <button className='play-pause-button' style={animationStyle} onClick={toggleMetronome}>{metronomeText}</button>
+          <button className='tap-bpm-button'>Tap for Tempo</button>
+        </div>
       </div>
     )
   }
