@@ -54,6 +54,7 @@ body {
 .tempo-display {
   display: flex;
   justify-content: center;
+  height: 6rem;
 }
 
 .tempo-text {
@@ -75,6 +76,13 @@ body {
 
 .tap-bpm-button:hover {
   background: #4e5789;
+}
+
+.note-viewer {
+  background-color: lightgray;
+  padding: 2rem;
+  display: flex;
+  border-radius: 0.5rem;
 }
 
 /*@media (prefers-color-scheme: dark) {
