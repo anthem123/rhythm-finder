@@ -1,4 +1,7 @@
 import Image from 'next/image'
+import quarterNote from './images/note/quarter.png'
+import eighthNote from './images/note/eighth.png'
+import sixteenthNote from './images/note/sixteenth.png'
 
 export default function NoteViewer({
   rhythmList
@@ -7,13 +10,13 @@ export default function NoteViewer({
     const noteValueMapping = noteValue => {
       switch (noteValue) {
         case 1:
-          return 'quarter';
+          return quarterNote;
         case .5:
-          return 'eighth'
+          return eighthNote
         case .25:
-          return 'sixteenth';
+          return sixteenthNote;
         default:
-          'null';
+          return null;
       }
     }
     
@@ -22,23 +25,24 @@ export default function NoteViewer({
         case 1:
           return 50;
         case .5:
-          return 100;
+          return 50;
         case .25:
           return 50;
         default:
-          0;
+          return 0;
       }
     }
 
-    const basePath = process.env.NEXT_PUBLIC_RESOURCE_PATH === undefined ? '/rhythm-finder' : process.env.NEXT_PUBLIC_RESOURCE_PATH;
+    const srcDirectory = process.env.NEXT_PUBLIC_RESOURCE_PATH === undefined 
+      ? '/rhythm-finder/notes/' : `${process.env.NEXT_PUBLIC_RESOURCE_PATH}/notes/`;
     const images = rhythmList
       .filter(rhythm => rhythm.noteValue !== undefined)
       .map((rhythm, index) => (
         <Image
           key={`image-${index}`}
-          src={`${basePath}/notes/${noteValueMapping(rhythm.noteValue)}.png`}
-          alt='Text'
-          width={50}
+          src={noteValueMapping(rhythm.noteValue)}
+          alt='Note'
+          width={noteWidthMapping(rhythm.noteValue)}
           height={100}
         />
       ));

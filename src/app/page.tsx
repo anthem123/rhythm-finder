@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Metronome from './metronome-view';
 import NoteViewer from './note-viewer';
 import { getNoteValue } from './utils/beat-calc'
@@ -29,6 +29,15 @@ export default function Home() {
     }
     
     console.log(rhythm);
+  }
+
+  const formatRhythm = rhythmList => {
+    const beatValue = 1;
+    const beatCount = 4;
+    const formattedRhythm = [];
+    rhythmList.forEach(rhythm => {
+      const beat = [];
+    });
   }
 
   return (
