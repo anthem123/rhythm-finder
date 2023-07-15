@@ -8,6 +8,7 @@ import { getNoteValue } from './utils/beat-calc'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
 import metronomeUtil from './metronome/metronome-util'
+import Footer from './footer';
 
 export default function Home() {
   const playIcon = <FontAwesomeIcon icon={faPlay} />;
@@ -66,18 +67,6 @@ export default function Home() {
       setMetronomeText(pauseIcon);
     }
   }
-  
-  let msTempo = 0;
-  if (tempo) {
-    msTempo = 60000/parseInt(tempo);
-  }
-
-  const animationStyle = metronomeOn ? {
-    '-webkit-animation': `pulse ${msTempo}ms infinite`,
-    '-moz-animation': `pulse ${msTempo}ms infinite`,
-    '-o-animation': `pulse ${msTempo}ms infinite`,
-    '-animation': `pulse ${msTempo}ms infinite`,
-  } : {};
 
   if (metronomeOn) {
     metronomeUtil.play(tempo);
@@ -106,10 +95,13 @@ export default function Home() {
       <NoteViewer
         rhythmList={rhythm}
       />
-      <div className="footer">
-        <button className="clickable-button tap-input-button" onClick={addRhythm}>Tap Rhythm Here!</button>
-        <button className='play-pause-button' style={animationStyle} onClick={toggleMetronome}>{metronomeText}</button>
-      </div>
+      <Footer 
+        tempo={tempo}
+        metronomeText={metronomeText}
+        metronomeOn={metronomeOn}
+        toggleMetronome={toggleMetronome}
+        addRhythm={addRhythm}
+      />
     </main>
   )
 }
