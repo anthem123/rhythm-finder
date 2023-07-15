@@ -1,0 +1,48 @@
+.metronome-holder {
+  position: absolute;
+  top: 8rem;
+  display: grid;
+  border: 2px lightskyblue solid;
+  border-radius: 0.5rem;
+  padding: 0 16px 16px 16px;
+  background-color: #223650;
+}
+
+.tap-bpm-button {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px lightgrey solid;
+  margin: 1rem;
+}
+
+.tap-bpm-button:hover {
+  background: #4e5789;
+}
+
+.play-pause-button {
+  margin: 1rem;
+  border-radius: 2rem;
+  border: 1px lightgrey solid;
+  padding: 1rem;
+  width: 4rem;
+}
+
+.metronome-close-button {
+  position: absolute;
+  left: 88%;
+  top: 9%;
+  border: 1px gray solid;
+  border-radius: 1rem;
+  width: 1.8rem;
+  color: gray;
+}
+
+.tempo-top-bar {
+  text-align: center;
+  border-bottom: 1px whitesmoke solid;
+  padding: 8px 0;
+}
+
+.tempo-title {
+  font-size: 2rem;
+}

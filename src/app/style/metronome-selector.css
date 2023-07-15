@@ -1,0 +1,15 @@
+.tempo-button {
+  width: 5rem;
+  height: 5rem;
+  border: 2px lightskyblue solid;
+  border-radius: 0.5rem;
+  display: grid;
+}
+
+.tempo-text {
+  font-size: 2rem;
+}
+
+.tempo-bpm {
+  position: relative;
+}

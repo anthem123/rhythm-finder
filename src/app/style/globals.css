@@ -26,14 +26,6 @@ body {
   height: 5rem;
 }
 
-.play-pause-button {
-  margin: 1rem;
-  border-radius: 2rem;
-  border: 1px lightgrey solid;
-  padding: 1rem;
-  width: 4rem;
-}
-
 .clickable-button {
   padding: 0.5rem;
   border: 1px lightgrey solid;
@@ -51,38 +43,19 @@ body {
   color: darkslategray;
 }
 
-.tempo-display {
-  display: flex;
-  justify-content: center;
-  height: 6rem;
-}
-
-.tempo-text {
-  padding: 0.5rem;
-  font-size: 4rem;
-}
-
-.tempo-bpm {
-  position: relative;
-  top: 60px;
-}
-
-.tap-bpm-button {
-  padding: 1rem;
-  border-radius: 1rem;
-  border: 1px lightgrey solid;
-  margin: 1rem;
-}
-
-.tap-bpm-button:hover {
-  background: #4e5789;
-}
-
 .note-viewer {
   background-color: lightgray;
   padding: 2rem;
   display: flex;
   border-radius: 0.5rem;
+  margin: 4rem;
+}
+
+.footer {
+  position: fixed;
+  left: 40%;
+  bottom: 0;
+  width: 100%;
 }
 
 /*@media (prefers-color-scheme: dark) {

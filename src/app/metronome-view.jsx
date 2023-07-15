@@ -1,60 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import metronomeUtil from './metronome/metronome-util'
 import TempoSlider from './tempo-slider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 export default function Metronome({
   tempo,
   setTempo,
-  setNewRhythm
+  metronomeOn,
+  toggleMetronome,
+  displayMetModal,
+  onClose
   }) {
-    const playIcon = <FontAwesomeIcon icon={faPlay} />;
-    const pauseIcon = <FontAwesomeIcon icon={faPause} />;
-    const [metronomeText, setMetronomeText] = useState(playIcon);
-    const [metronomeOn, setMetronomeOn] = useState(false);
-    useEffect(() => {
-      // call api or anything
-      const basePath = process.env.RESOURCE_PATH === undefined ? '/rhythm-finder' : process.env.RESOURCE_PATH;
-      metronomeUtil.init(basePath);
-    });
-
-    const toggleMetronome = () => {
-      if (metronomeOn) {
-        setMetronomeOn(false);
-        setMetronomeText(playIcon);
-        setNewRhythm(true);
-      } else {
-        setMetronomeOn(true);
-        setMetronomeText(pauseIcon);
-      }
+    if (!displayMetModal) {
+      return null;
     }
 
-    if (metronomeOn) {
-      metronomeUtil.play(tempo);
-    } else {
-      metronomeUtil.stop();
-    }
-
-    let msTempo;
-    if (tempo) {
-      msTempo = 60000/tempo;
-    } else {
-      msTempo = 0;
-    }
-
-    const animationStyle = metronomeOn ? {
-      '-webkit-animation': `pulse ${msTempo}ms infinite`,
-      '-moz-animation': `pulse ${msTempo}ms infinite`,
-      '-o-animation': `pulse ${msTempo}ms infinite`,
-      '-animation': `pulse ${msTempo}ms infinite`,
-    } : {};
-    
     return (
-      <div>
-        <div className='tempo-display'>
-          <p className='tempo-text'>{tempo}</p>
-          <p className='tempo-bpm'>BPM</p>
+      <div className='metronome-holder'>
+        <div className='tempo-top-bar'>
+          <span className='tempo-title'>Set Tempo</span>
+          <button onClick={onClose} className='metronome-close-button'>
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         </div>
         <TempoSlider
           tempo={tempo}
@@ -62,10 +29,7 @@ export default function Metronome({
           metronomeOn={metronomeOn}
           toggleMetronome={toggleMetronome}
         />
-        <div>
-          <button className='play-pause-button' style={animationStyle} onClick={toggleMetronome}>{metronomeText}</button>
-          <button className='tap-bpm-button'>Tap for Tempo</button>
-        </div>
+        <button className='tap-bpm-button'>Tap for Tempo</button>
       </div>
     )
   }

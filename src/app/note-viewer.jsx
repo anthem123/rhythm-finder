@@ -33,8 +33,6 @@ export default function NoteViewer({
       }
     }
 
-    const srcDirectory = process.env.NEXT_PUBLIC_RESOURCE_PATH === undefined 
-      ? '/rhythm-finder/notes/' : `${process.env.NEXT_PUBLIC_RESOURCE_PATH}/notes/`;
     const images = rhythmList
       .filter(rhythm => rhythm.noteValue !== undefined)
       .map((rhythm, index) => (
