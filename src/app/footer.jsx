@@ -21,9 +21,11 @@ export default function Footer({
     } : {};
 
     return (
-      <div className="footer">
-        <button className="clickable-button tap-input-button" onClick={addRhythm}>Tap Rhythm Here!</button>
-        <button className='play-pause-button' style={animationStyle} onClick={toggleMetronome}>{metronomeText}</button>
-      </div>
+      <footer>
+        <div className="footer">
+          <button className="clickable-button tap-input-button" onClick={addRhythm}>Tap Rhythm Here!</button>
+          <button className='play-pause-button' style={animationStyle} onClick={toggleMetronome}>{metronomeText}</button>
+        </div>
+      </footer>
     )
   }

@@ -51,11 +51,15 @@ body {
   margin: 4rem;
 }
 
-.footer {
-  position: fixed;
-  left: 40%;
+footer {
   bottom: 0;
+  position: fixed;
   width: 100%;
+}
+
+.footer {
+  width: 23rem;
+  margin: auto;
 }
 
 /*@media (prefers-color-scheme: dark) {
