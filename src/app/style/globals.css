@@ -22,7 +22,7 @@ body {
 }
 
 .tap-input-button {
-  width: 15rem;
+  width: 12rem;
   height: 5rem;
 }
 
@@ -45,10 +45,11 @@ body {
 
 .note-viewer {
   background-color: lightgray;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
+  flex-flow: row wrap;
   border-radius: 0.5rem;
-  margin: 4rem;
+  margin-top: 2rem;
 }
 
 footer {
@@ -58,7 +59,7 @@ footer {
 }
 
 .footer {
-  width: 23rem;
+  width: 20rem;
   margin: auto;
 }
 

@@ -19,19 +19,6 @@ export default function NoteViewer({
           return null;
       }
     }
-    
-    const noteWidthMapping = noteValue => {
-      switch (noteValue) {
-        case 1:
-          return 50;
-        case .5:
-          return 50;
-        case .25:
-          return 50;
-        default:
-          return 0;
-      }
-    }
 
     const images = rhythmList
       .filter(rhythm => rhythm.noteValue !== undefined)
@@ -40,8 +27,8 @@ export default function NoteViewer({
           key={`image-${index}`}
           src={noteValueMapping(rhythm.noteValue)}
           alt='Note'
-          width={noteWidthMapping(rhythm.noteValue)}
-          height={100}
+          width={25}
+          height={50}
         />
       ));
 
