@@ -47,14 +47,7 @@ export default function Home() {
       ]);
     }
     
-    console.log(rhythm);
-  }
-
-  const formatRhythm = rhythmList => {
-    const formattedRhythm = [];
-    rhythmList.forEach(rhythm => {
-      const beat = [];
-    });
+    // console.log(rhythm);
   }
 
   const toggleMetronome = () => {
@@ -94,6 +87,8 @@ export default function Home() {
       />
       <NoteViewer
         rhythmList={rhythm}
+        beatCount={beatCount}
+        beatValue={beatValue}
       />
       <Footer 
         tempo={tempo}
