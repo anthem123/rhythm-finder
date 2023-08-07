@@ -87,8 +87,8 @@ export default function Home() {
       />
       <NoteViewer
         rhythmList={rhythm}
-        beatCount={beatCount}
-        beatValue={beatValue}
+        maxBeatCount={beatCount}
+        maxBeatValue={beatValue}
       />
       <Footer 
         tempo={tempo}

@@ -8,88 +8,92 @@ import dottedEighthNote from './images/note/dotted-eighth.png'
 import eighthNote from './images/note/eighth.png'
 import sixteenthNote from './images/note/sixteenth.png'
 
+import sixteenthRest from './images/rest/sixteenth.png'
+import eighthRest from './images/rest/eighth.png'
+import quarterRest from './images/rest/quarter.png'
+
 export default function NoteViewer({
   rhythmList,
-  beatCount,
-  beatValue
+  maxBeatCount,
+  maxBeatValue
   }) {
 
-    const getBeatValue = beat => {
+    const getBeatCount = measure => {
       let value = 0;
-      beat.forEach(sub => value += sub.value);
+      measure.forEach(sub => value += sub.value);
       return value;
     }
 
+  const addBeatToMeasure = (subdivision, measure, fullScore) => {
+    const currentMeasureCount = getBeatCount(measure);
+    if ((currentMeasureCount + subdivision.value) <= maxBeatCount) {
+      measure.push(JSON.parse(JSON.stringify(subdivision)));
+      if (getBeatCount(measure) === maxBeatCount) {
+        fullScore.push(JSON.parse(JSON.stringify(measure)));
+        measure.length = 0;
+      }
+    } else {
+      const measureCountLeft = maxBeatCount - currentMeasureCount;
+      measure.push({ type: 'note', value: measureCountLeft });
+      fullScore.push(JSON.parse(JSON.stringify(measure)));
+      measure.length = 0;
+      measure.push({ type: 'rest', value: subdivision.value - measureCountLeft});
+    }
+  }
+
   const formatRhythm = rhythmList => {
     const formattedRhythm = [];
-    let leftOverValue = 0;
+    let measure = [];
     let beat = [];
-    console.log(rhythmList.length);
     for (const rhythm of rhythmList) {
-      console.log(rhythm);
-      if (leftOverValue > 0) {
-        // If the previous leftOverValue is >= the beatValue
-        // Add quarter rests until we have a note
-        while (leftOverValue >= beatValue) {
-          formattedRhythm.push([{ type: 'rest', value: beatValue }]);
-          leftOverValue = leftOverValue - beatValue;
-        }
-        // Now that we have a leftOverValue less than a beatValue
-        // Add a rest to prepare for the note
-        if (leftOverValue > 0) {
-          beat.push({ type: 'rest', value: leftOverValue });
-          leftOverValue = 0;
-        }
-      }
-      const currentBeatValue = getBeatValue(beat);
-      // If we currently have a rest in the beat
-      // We only want to add a note that fills the rest of the beat
-      if (currentBeatValue > 0) {
-        const beatValueLeft = beatValue - currentBeatValue;
-        // If the currentNoteValue is greater than the beatValue we have left
-        // Add beatValueLeft to the beat
-        // assign rest of value to leftOverValue
-        if (rhythm.noteValue > beatValueLeft) {
-          beat.push({type: 'note', value: beatValueLeft});
-          leftOverValue = rhythm.noteValue - beatValueLeft;
-          formattedRhythm.push(beat);
-          beat = [];
-        }
-        // Add note to beat
-        else {
-          beat.push({ type: 'note', value: rhythm.noteValue});
-          // If beat is full add to list
-          if (getBeatValue(beat) === beatValue) {
-            formattedRhythm.push(beat);
-            beat = [];
-          }
-        }
-      }
-      // If the noteValue is greater the beatValue
-      // Set noteValue up to value of beatCount
-      // Everything else is set to leftOverValue
-      else if (rhythm.noteValue > beatValue) {
-        if (rhythm.noteValue > beatCount) {
-          formattedRhythm.push([{ type: 'note', value: rhythm.beatCount }]);
-          leftOverValue = rhythm.noteValue > beatCount;
-        } else {
-          formattedRhythm.push([{ type: 'note', value: rhythm.noteValue }]);
-        }    
-      }
-      // Just add the note
-      else {
+      const currentBeatValue = getBeatCount(beat);
+      // Empty beat, add note
+      if (currentBeatValue === 0) {
         beat.push({ type: 'note', value: rhythm.noteValue });
-        if (getBeatValue(beat) === beatValue) {
-          formattedRhythm.push(beat);
-          beat = [];
+        // If that beat is a full value add to measure
+        if (rhythm.noteValue % maxBeatValue === 0) {
+          addBeatToMeasure(JSON.parse(JSON.stringify(beat[0])), measure, formattedRhythm);
+          beat.length = 0;
         }
       }
+      // If adding the next note creates a whole beat
+      // Add all to the measure
+      else if ((currentBeatValue + rhythm.noteValue) % maxBeatValue === 0) {
+        beat.push({ type: 'note', value: rhythm.noteValue });
+        beat.forEach(sub => addBeatToMeasure(JSON.parse(JSON.stringify(sub)), measure, formattedRhythm));
+        beat.length = 0;
+      } 
+      // If adding the next note to the beat doesn't equal a full beat, just add it to the beat
+      else if ((currentBeatValue + rhythm.noteValue) < maxBeatValue) {
+        beat.push({ type: 'note', value: rhythm.noteValue });
+      }
+      // The next note gives an odd value, split up the note
+      else {
+        const remainder = (currentBeatValue + rhythm.noteValue) % maxBeatValue;
+        beat.push({ type: 'note', value: rhythm.noteValue - remainder});
+        beat.forEach(sub => addBeatToMeasure(JSON.parse(JSON.stringify(sub)), measure, formattedRhythm));
+        beat.length = 0;
+        beat.push({ type: 'rest', value: remainder });
+      }
+    }
+    // Pad end of measure with rests
+    if (beat.length > 0) {
+      const beatLeft = maxBeatValue - getBeatCount(beat);
+      beat.push({ type: 'rest', value: beatLeft });
+      beat.forEach(sub => measure.push(sub));
+    }
+
+    if (measure.length > 0) {
+      while (getBeatCount(measure) < maxBeatValue * maxBeatCount) {
+        measure.push({ type: 'rest', value: maxBeatValue });
+      }
+      formattedRhythm.push(measure);
     }
 
     return formattedRhythm;
   }
 
-    const noteValueMapping = noteValue => {
+    const noteValueMapping = (noteValue, noteType) => {
       switch (noteValue) {
         case 4:
           return wholeNote;
@@ -100,50 +104,59 @@ export default function NoteViewer({
         case 1.5:
           return dottedQuarterNote;
         case 1:
-          return quarterNote;
+          return noteType === 'note' ? quarterNote : quarterRest;
         case .75:
           return dottedEighthNote;
         case .5:
-          return eighthNote
+          return noteType === 'note' ? eighthNote : eighthRest;
         case .25:
-          return sixteenthNote;
+          return noteType === 'note' ? sixteenthNote : sixteenthRest;
         default:
           return null;
       }
     }
 
-    const images = rhythmList
-      .filter(rhythm => rhythm.noteValue !== undefined)
-      .map((rhythm, index) => {
-        if (rhythm.noteValue === 1.5 || rhythm.noteValue === .75) {
-          return <Image
-            key={`image-${index}`}
-            src={noteValueMapping(rhythm.noteValue)}
-            alt='Note'
-            width={25}
-            height={50}
-            style={{
-              margin: '0 10px',
-            }}
-          />
-        } else {
-          return <Image
-            key={`image-${index}`}
-            src={noteValueMapping(rhythm.noteValue)}
-            alt='Note'
-            width={25}
-            height={50}
-          />
-        }
-      });
+    const noteStyleMappinig = (noteValue, noteType) => {
+      switch (noteValue) {
+        case 1.5:
+        case .75:
+          return {
+            margin: '0 10px',
+          };
+        case 2:
+          return {
+            'margin-right': '25px',
+          };
+        default:
+          return {};
+      }
+    }
+
+    const formattedImages = rhythmList => {
+      const formattedRhythmList = formatRhythm(rhythmList);
+      return formattedRhythmList.map((measure, m_index) => {
+        return <div key={`measure-${m_index}`} className='measure'>
+          {measure.map((note, index) => {
+            return <Image
+              key={`image-${index}`}
+              src={noteValueMapping(note.value, note.type)}
+              alt='Note'
+              width={25}
+              height={50}
+              style={noteStyleMappinig(note.value, note.type)}
+            />
+          })}
+        </div>
+      })
+    }
 
     if (rhythmList.length === 0) {
       return <div></div>
     }
-    console.log(formatRhythm(rhythmList));
+
     return (
       <div className='note-viewer'>
-        {images}
+        {formattedImages(rhythmList)}
       </div>
     )
   }

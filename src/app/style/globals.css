@@ -46,10 +46,16 @@ body {
 .note-viewer {
   background-color: lightgray;
   padding: 1rem;
-  display: flex;
   flex-flow: row wrap;
   border-radius: 0.5rem;
   margin-top: 2rem;
+}
+
+.measure {
+  display: flex;
+  margin: 10px;
+  border: 1px black solid;
+  padding: 10px;
 }
 
 footer {
