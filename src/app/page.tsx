@@ -46,8 +46,6 @@ export default function Home() {
         { start: newTime, diff: 0, noteValue: 1 }
       ]);
     }
-    
-    // console.log(rhythm);
   }
 
   const toggleMetronome = () => {

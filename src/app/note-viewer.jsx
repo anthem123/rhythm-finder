@@ -12,6 +12,19 @@ import sixteenthRest from './images/rest/sixteenth.png'
 import eighthRest from './images/rest/eighth.png'
 import quarterRest from './images/rest/quarter.png'
 
+import Two8ths from './images/rhythm/8-8.png'
+import Four16ths from './images/rhythm/16-16-16-16.png'
+import One8thTwo16ths from './images/rhythm/8-16-16.png'
+import One8thRestTwo16ths from './images/rhythm/8r-16-16.png'
+import Two16thsOne8th from './images/rhythm/16-16-8.png'
+import One16thOne8thOne16th from './images/rhythm/16-8-16.png'
+import Dotted8th16th from './images/rhythm/8d-16.png'
+import One16thDotted8th from './images/rhythm/16-8d.png'
+import One16thRestThree16ths from './images/rhythm/16r-16-16-16.png'
+import One16thRestOne16thRepeat from './images/rhythm/16r-8-16.png'
+
+import { checkBeatCombo } from './utils/note-combos'
+
 export default function NoteViewer({
   rhythmList,
   maxBeatCount,
@@ -24,7 +37,16 @@ export default function NoteViewer({
       return value;
     }
 
-  const addBeatToMeasure = (subdivision, measure, fullScore) => {
+  const addBeatToMeasure = (beat, measure, fullScore) => {
+    checkBeatCombo(beat);
+    if (beat.rhythmCombo == undefined) {
+      beat.subDivisions.forEach(sub => addSubDivisionToMeasure(JSON.parse(JSON.stringify(sub)), measure, fullScore));
+    } else {
+      addSubDivisionToMeasure(JSON.parse(JSON.stringify(beat)), measure, fullScore)
+    }
+  }
+
+  const addSubDivisionToMeasure = (subdivision, measure, fullScore) => {
     const currentMeasureCount = getBeatCount(measure);
     if ((currentMeasureCount + subdivision.value) <= maxBeatCount) {
       measure.push(JSON.parse(JSON.stringify(subdivision)));
@@ -44,43 +66,60 @@ export default function NoteViewer({
   const formatRhythm = rhythmList => {
     const formattedRhythm = [];
     let measure = [];
-    let beat = [];
+    let beat = {
+      value: 0,
+      subDivisions: [],
+    };
     for (const rhythm of rhythmList) {
-      const currentBeatValue = getBeatCount(beat);
       // Empty beat, add note
-      if (currentBeatValue === 0) {
-        beat.push({ type: 'note', value: rhythm.noteValue });
+      if (beat.value === 0) {
+        beat.value = rhythm.noteValue;
+        beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
         // If that beat is a full value add to measure
-        if (rhythm.noteValue % maxBeatValue === 0) {
-          addBeatToMeasure(JSON.parse(JSON.stringify(beat[0])), measure, formattedRhythm);
-          beat.length = 0;
+        if (beat.value % maxBeatValue === 0) {
+          addBeatToMeasure(beat, measure, formattedRhythm);
+          beat = {
+            value: 0,
+            subDivisions: [],
+          };
         }
       }
       // If adding the next note creates a whole beat
       // Add all to the measure
-      else if ((currentBeatValue + rhythm.noteValue) % maxBeatValue === 0) {
-        beat.push({ type: 'note', value: rhythm.noteValue });
-        beat.forEach(sub => addBeatToMeasure(JSON.parse(JSON.stringify(sub)), measure, formattedRhythm));
-        beat.length = 0;
+      else if ((beat.value + rhythm.noteValue) % maxBeatValue === 0) {
+        beat.value += rhythm.noteValue;
+        beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
+        addBeatToMeasure(beat, measure, formattedRhythm);
+        beat = {
+          value: 0,
+          subDivisions: [],
+        };
       } 
       // If adding the next note to the beat doesn't equal a full beat, just add it to the beat
-      else if ((currentBeatValue + rhythm.noteValue) < maxBeatValue) {
-        beat.push({ type: 'note', value: rhythm.noteValue });
+      else if ((beat.value + rhythm.noteValue) < maxBeatValue) {
+        beat.value += rhythm.noteValue
+        beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
       }
       // The next note gives an odd value, split up the note
       else {
-        const remainder = (currentBeatValue + rhythm.noteValue) % maxBeatValue;
-        beat.push({ type: 'note', value: rhythm.noteValue - remainder});
-        beat.forEach(sub => addBeatToMeasure(JSON.parse(JSON.stringify(sub)), measure, formattedRhythm));
-        beat.length = 0;
-        beat.push({ type: 'rest', value: remainder });
+        const remainder = (beat.value + rhythm.noteValue) % maxBeatValue;
+        const newValue = rhythm.noteValue - remainder;
+        beat.value += newValue;
+        beat.subDivisions.push({ type: 'note', value: newValue});
+        addBeatToMeasure(beat, measure, formattedRhythm);
+        beat = {
+          value: 0,
+          subDivisions: [],
+        };
+        beat.value = remainder;
+        beat.subDivisions.push({ type: 'rest', value: remainder });
       }
     }
     // Pad end of measure with rests
-    if (beat.length > 0) {
-      const beatLeft = maxBeatValue - getBeatCount(beat);
-      beat.push({ type: 'rest', value: beatLeft });
-      beat.forEach(sub => measure.push(sub));
+    if (beat.value > 0) {
+      const beatLeft = maxBeatValue - beat.value;
+      beat.subDivisions.push({ type: 'rest', value: beatLeft });
+      beat.subDivisions.forEach(sub => measure.push(sub));
     }
 
     if (measure.length > 0) {
@@ -116,34 +155,89 @@ export default function NoteViewer({
       }
     }
 
-    const noteStyleMappinig = (noteValue, noteType) => {
+    const noteStyleMappinig = (noteValue, noteType, rhythmCombo) => {
       switch (noteValue) {
         case 1.5:
         case .75:
           return {
             margin: '0 10px',
+            height: 'auto',
+            width: 'auto'
           };
         case 2:
           return {
             'margin-right': '25px',
+            height: 'auto',
+            width: 'auto'
           };
         default:
-          return {};
+          if (rhythmCombo === '16-16-8'
+            || rhythmCombo === '16-8-16') {
+            return {
+              height: 'auto',
+              width: 'auto',
+              margin: '0 10px',
+            }
+          }
+          return {
+            height: 'auto',
+            width: 'auto'
+          };
       }
+    }
+
+    const rhythmMapping = rhythm => {
+      switch(rhythm) {
+        case '8-8':
+          return Two8ths;
+        case '16-16-16-16':
+          return Four16ths;
+        case '16r-16-16-16':
+          return One16thRestThree16ths;
+        case '16r-8-16':
+          return One16thRestOne16thRepeat;
+        case '8-16-16':
+          return One8thTwo16ths;
+        case '8r-16-16':
+          return One8thRestTwo16ths;
+        case '16-16-8':
+          return Two16thsOne8th;
+        case '16-8-16':
+          return One16thOne8thOne16th;
+        case '8d-16':
+          return Dotted8th16th;
+        case '16-8d':
+          return One16thDotted8th;
+        default:
+          return quarterRest;
+      }
+    }
+
+    const widthMapping = rhythm => {
+      if (rhythm.rhythmCombo === '8d-16'
+        || rhythm.rhythmCombo === '16-8d'
+        || rhythm.rhythmCombo === '8r-16-16'
+        || rhythm.rhythmCombo === '16r-8-16'
+        || rhythm.rhythmCombo === '16r-16-16-16'
+        || rhythm.rhythmCombo === '16-16-16-16') {
+        return 50;
+      }
+      return 25;
     }
 
     const formattedImages = rhythmList => {
       const formattedRhythmList = formatRhythm(rhythmList);
+      console.log(formattedRhythmList);
       return formattedRhythmList.map((measure, m_index) => {
         return <div key={`measure-${m_index}`} className='measure'>
           {measure.map((note, index) => {
             return <Image
               key={`image-${index}`}
-              src={noteValueMapping(note.value, note.type)}
+              src={note.rhythmCombo ? rhythmMapping(note.rhythmCombo) : noteValueMapping(note.value, note.type)}
               alt='Note'
-              width={25}
+              width={widthMapping(note)}
               height={50}
-              style={noteStyleMappinig(note.value, note.type)}
+              style={noteStyleMappinig(note.value, note.type, note.rhythmCombo)}
             />
           })}
         </div>

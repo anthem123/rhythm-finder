@@ -32,7 +32,6 @@ function nextNote() {
 }
 
 function scheduleNote( beatNumber, time ) {
-  // console.log('Schedule note');
   // push the note on the queue, even if we're not playing.
   notesInQueue.push( { note: beatNumber, time: time } );
 
