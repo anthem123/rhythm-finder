@@ -244,6 +244,10 @@ export default function NoteViewer({
       })
     }
 
+    const formattedSvgs = rhythmList => {
+      
+    }
+
     if (rhythmList.length === 0) {
       return <div></div>
     }
