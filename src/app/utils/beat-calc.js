@@ -1,4 +1,5 @@
-const beatValues = [4, 2, 1.75, 1.5, 1.25, 1, .75, .5, .25];
+const beatValues = [4, 2.5, 2, 1.75, 1.5, 1.25, 1, .75, .5, .25];
+export const nonNotes = [2.5, 1.75, 1.5];
 
 export const getNoteValue = (duration, tempo) => {
   if (tempo === undefined) {

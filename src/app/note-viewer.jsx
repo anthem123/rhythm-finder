@@ -25,6 +25,7 @@ import One16thRestThree16ths from './images/rhythm/16r-16-16-16.png'
 import One16thRestOne16thRepeat from './images/rhythm/16r-8-16.png'
 
 import { checkBeatCombo } from './utils/note-combos'
+import { nonNotes } from './utils/beat-calc'
 
 export default function NoteViewer({
   rhythmList,
@@ -57,7 +58,7 @@ export default function NoteViewer({
       }
     } else {
       const measureCountLeft = maxBeatCount - currentMeasureCount;
-      measure.push({ type: 'note', value: measureCountLeft });
+      measure.push({ type: subdivision.type, value: measureCountLeft });
       fullScore.push(JSON.parse(JSON.stringify(measure)));
       measure.length = 0;
       measure.push({ type: 'rest', value: subdivision.value - measureCountLeft});
@@ -73,7 +74,7 @@ export default function NoteViewer({
     };
     for (const rhythm of rhythmList) {
       // Empty beat, add note
-      if (beat.value === 0 && (rhythm.noteValue !== 1.25 && rhythm.noteValue !== 1.75)) {
+      if (beat.value === 0 && !nonNotes.includes(rhythm.noteValue)) {
         beat.value = rhythm.noteValue;
         beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
         // If that beat is a full value add to measure
@@ -87,7 +88,7 @@ export default function NoteViewer({
       }
       // If adding the next note creates a whole beat
       // Add all to the measure
-      else if ((beat.value + rhythm.noteValue) % maxBeatValue === 0) {
+      else if ((beat.value + rhythm.noteValue) % maxBeatValue === 0 && !nonNotes.includes(rhythm.noteValue)) {
         beat.value += rhythm.noteValue;
         beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
         addBeatToMeasure(beat, measure, formattedRhythm);
@@ -103,7 +104,13 @@ export default function NoteViewer({
       }
       // The next note gives an odd value, split up the note
       else {
-        const remainder = (beat.value + rhythm.noteValue) % maxBeatValue;
+        let remainder = (beat.value + rhythm.noteValue) % maxBeatValue;
+        // To account for non-notes adding up to a full beat
+        // ei: .75 rest + 1.25 note adds to 2 but should be broken up
+        // to .75 rest + .25 note + 1 rest
+        if (remainder === 0 && (beat.value + rhythm.noteValue) > maxBeatValue) {
+          remainder = beat.value + rhythm.noteValue - maxBeatValue;
+        } 
         const newValue = rhythm.noteValue - remainder;
         beat.value += newValue;
         beat.subDivisions.push({ type: 'note', value: newValue});
@@ -112,8 +119,17 @@ export default function NoteViewer({
           value: 0,
           subDivisions: [],
         };
-        beat.value = remainder;
-        beat.subDivisions.push({ type: 'rest', value: remainder });
+        if (remainder > 0) {
+          beat.value = remainder;
+          beat.subDivisions.push({ type: 'rest', value: remainder });
+          if (remainder % maxBeatValue === 0) {
+            addBeatToMeasure(beat, measure, formattedRhythm);
+            beat = {
+              value: 0,
+              subDivisions: [],
+            };
+          }
+        }
       }
     }
     // Pad end of measure with rests
@@ -231,7 +247,7 @@ export default function NoteViewer({
       console.log(formattedRhythmList);
       return formattedRhythmList.map((measure, m_index) => {
         return <div key={`measure-${m_index}`} className='measure'>
-          {measure.map((note, index) => {
+          {measure.filter(note => note.value > 0).map((note, index) => {
             return <Image
               key={`image-${index}`}
               src={note.rhythmCombo ? rhythmMapping(note.rhythmCombo) : noteValueMapping(note.value, note.type)}
