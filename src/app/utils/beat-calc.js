@@ -1,16 +1,23 @@
-const checkNoteDuration = (duration, beatMs, beatValue) => {
-  const errorPercent = (100 - process.env.NEXT_PUBLIC_NOTE_ACCURACY) / 100;
-  return duration >= (beatMs * beatValue * (1 - errorPercent))
-    && duration <= (beatMs * beatValue * (1 + errorPercent));
-}
-
-const beatValues = [4, 2, 1.5, 1, .75, .5, .25]
+const beatValues = [4, 2, 1.75, 1.5, 1.25, 1, .75, .5, .25];
 
 export const getNoteValue = (duration, tempo) => {
   if (tempo === undefined) {
     return 'null';
   }
-  const beatMs = 60000/parseInt(tempo);
 
-  return beatValues.find(beatValue => checkNoteDuration(duration, beatMs, beatValue));
+  const mappedMs = beatValues.map(beat => {
+    return {
+      value: beat,
+      ms: 60000/parseInt(tempo) * beat
+  }});
+
+  let msDiff = 99999999999999;
+  let closestBeat;
+  mappedMs.forEach(map => {
+    if (Math.abs(duration - map.ms) < msDiff) {
+      msDiff = Math.abs(duration - map.ms);
+      closestBeat = map.value;
+    }
+  });
+  return closestBeat;
 }

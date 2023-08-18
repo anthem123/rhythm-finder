@@ -10,6 +10,7 @@ import sixteenthNote from './images/note/sixteenth.png'
 
 import sixteenthRest from './images/rest/sixteenth.png'
 import eighthRest from './images/rest/eighth.png'
+import dottedEighthRest from './images/rest/dotted-eighth.png'
 import quarterRest from './images/rest/quarter.png'
 
 import Two8ths from './images/rhythm/8-8.png'
@@ -72,7 +73,7 @@ export default function NoteViewer({
     };
     for (const rhythm of rhythmList) {
       // Empty beat, add note
-      if (beat.value === 0) {
+      if (beat.value === 0 && (rhythm.noteValue !== 1.25 && rhythm.noteValue !== 1.75)) {
         beat.value = rhythm.noteValue;
         beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
         // If that beat is a full value add to measure
@@ -145,7 +146,7 @@ export default function NoteViewer({
         case 1:
           return noteType === 'note' ? quarterNote : quarterRest;
         case .75:
-          return dottedEighthNote;
+          return noteType === 'note' ? dottedEighthNote : dottedEighthRest;
         case .5:
           return noteType === 'note' ? eighthNote : eighthRest;
         case .25:

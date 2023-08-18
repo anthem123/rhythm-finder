@@ -25,7 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     // call api or anything
-    const basePath = process.env.NEXT_PUBLIC_RESOURCE_PATH === undefined ? '/rhythm-finder' : process.env.NEXT_PUBLIC_RESOURCE_PATH;
+    const basePath = process.env.NEXT_PUBLIC_RESOURCE_PATH ?? '/rhythm-finder'
     metronomeUtil.init(basePath);
   });
 

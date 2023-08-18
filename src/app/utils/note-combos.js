@@ -16,7 +16,7 @@ const valueNoteMapping = (noteValue, noteType) => {
     case .5:
       return noteType === 'note' ? '8' : '8r';
     case .75:
-      return '8d'
+      return noteType === 'note' ? '8d' : '8dr';
     case .25:
       return noteType === 'note' ? '16' : '16r';
     default:

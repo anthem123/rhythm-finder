@@ -57,6 +57,7 @@ body {
   border: 1px black solid;
   padding: 10px;
   height: 80px;
+  width: auto;
 }
 
 footer {
