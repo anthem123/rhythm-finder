@@ -1,54 +1,44 @@
-var audioContext = null;
-var unlocked = false;
-var isPlaying = false;      // Are we currently playing?
-var current16thNote;        // What note is currently last scheduled?
-var tempo = 120.0;          // tempo (in beats per minute)
-var lookahead = 25.0;       // How frequently to call scheduling function 
+let audioContext = null;
+let unlocked = false;
+let isPlaying = false;      // Are we currently playing?
+let currentBeat;        // What note is currently last scheduled?
+let tempo = 100.0;          // tempo (in beats per minute)
+let lookahead = 25.0;       // How frequently to call scheduling function 
                             //(in milliseconds)
-var scheduleAheadTime = 0.1;    // How far ahead to schedule audio (sec)
+let scheduleAheadTime = 0.1;    // How far ahead to schedule audio (sec)
                             // This is calculated from lookahead, and overlaps 
                             // with next interval (in case the timer is late)
-var nextNoteTime = 0.0;     // when the next note is due.
-var noteResolution = 0;     // 0 == 16th, 1 == 8th, 2 == quarter note
-var noteLength = 0.05;      // length of "beep" (in seconds)
-var notesInQueue = [];      // the notes that have been put into the web audio,
+let nextNoteTime = 0.0;     // when the next note is due.
+let noteResolution = 0;     // 0 == 16th, 1 == 8th, 2 == quarter note
+let noteLength = 0.05;      // length of "beep" (in seconds)
+let notesInQueue = [];      // the notes that have been put into the web audio,
                             // and may or may not have played yet. {note, time}
-var timerWorker = null;     // The Web Worker used to fire timer messages
+let timerWorker = null;     // The Web Worker used to fire timer messages
 
 
 // First, let's shim the requestAnimationFrame API, with a setTimeout fallback
 // window.requestAnimFrame = window.requestAnimationFrame;
 
 function nextNote() {
-    // Advance current note and time by a 16th note...
+    // Advance current note and time...
     const secondsPerBeat = 60.0 / tempo;    // Notice this picks up the CURRENT 
                                           // tempo value to calculate beat length.
-    nextNoteTime += 0.25 * secondsPerBeat;    // Add beat length to last beat time
+    nextNoteTime += secondsPerBeat;    // Add beat length to last beat time
 
-    current16thNote++;    // Advance the beat number, wrap to zero
-    if (current16thNote == 16) {
-        current16thNote = 0;
+    currentBeat++;    // Advance the beat number, wrap to zero
+    if (currentBeat == 4) {
+        currentBeat = 0;
     }
 }
 
 function scheduleNote( beatNumber, time ) {
   // push the note on the queue, even if we're not playing.
-  notesInQueue.push( { note: beatNumber, time: time } );
-
-  if ( (noteResolution==1) && (beatNumber%2)) {
-    return; // we're not playing non-8th 16th notes
-  }
-  if ( (noteResolution==2) && (beatNumber%4)) {
-    return; // we're not playing non-quarter 8th notes
-  }
+  // notesInQueue.push( { note: beatNumber, time: time } );
 
   // create an oscillator
-  var osc = audioContext.createOscillator();
+  let osc = audioContext.createOscillator();
   osc.connect( audioContext.destination );
-  if (beatNumber % 4 === 0 )    // quarter notes = medium pitch
-    osc.frequency.value = 440.0;
-  else                        // other 16th notes = low pitch
-    osc.frequency.value = 0;
+  osc.frequency.value = 440.0;
 
   osc.start( time );
   osc.stop( time + noteLength );
@@ -58,7 +48,7 @@ function scheduler() {
   // while there are notes that will need to play before the next interval, 
   // schedule them and advance the pointer.
   while (nextNoteTime < audioContext.currentTime + scheduleAheadTime ) {
-    scheduleNote( current16thNote, nextNoteTime );
+    scheduleNote( currentBeat, nextNoteTime );
     nextNote();
   }
 }
@@ -70,8 +60,8 @@ const play = (newTempo) => {
 
   if (!unlocked) {
     // play silent buffer to unlock the audio
-    var buffer = audioContext.createBuffer(1, 1, 22050);
-    var node = audioContext.createBufferSource();
+    let buffer = audioContext.createBuffer(1, 1, 22050);
+    let node = audioContext.createBufferSource();
     node.buffer = buffer;
     node.start(0);
     unlocked = true;
@@ -79,11 +69,13 @@ const play = (newTempo) => {
 
   if (!isPlaying) {
     isPlaying = true;
-    current16thNote = 0;
+    currentBeat = 0;
     nextNoteTime = audioContext.currentTime;
     tempo = newTempo;
     timerWorker.postMessage("start");
   }
+
+  return new Date().getTime() + (60000/parseInt(tempo) * 4);
 }
 
 const stop = () => {

@@ -12,6 +12,7 @@ import sixteenthRest from './images/rest/sixteenth.png'
 import eighthRest from './images/rest/eighth.png'
 import dottedEighthRest from './images/rest/dotted-eighth.png'
 import quarterRest from './images/rest/quarter.png'
+import halfRest from './images/rest/half.png'
 
 import Two8ths from './images/rhythm/8-8.png'
 import Four16ths from './images/rhythm/16-16-16-16.png'
@@ -25,7 +26,7 @@ import One16thRestThree16ths from './images/rhythm/16r-16-16-16.png'
 import One16thRestOne16thRepeat from './images/rhythm/16r-8-16.png'
 
 import { checkBeatCombo } from './utils/note-combos'
-import { nonNotes } from './utils/beat-calc'
+import { nonNotes, getNoteValue } from './utils/beat-calc'
 
 export default function NoteViewer({
   rhythmList,
@@ -73,7 +74,38 @@ export default function NoteViewer({
       subDivisions: [],
     };
     for (const rhythm of rhythmList) {
-      // Empty beat, add note
+
+      if (rhythm.startingValue && rhythm.startingValue > 0) {
+
+        if (rhythm.pickUp) {
+          console.log('Start Pick up');
+          let restToAdd = maxBeatCount - rhythm.startingValue;
+          console.log(restToAdd);
+          while (restToAdd >= maxBeatValue) {
+            console.log(restToAdd);
+            addSubDivisionToMeasure({ value: maxBeatValue, type: 'rest' }, measure, formattedRhythm);
+            restToAdd -= maxBeatValue;
+          }
+          if (restToAdd > 0) {
+            beat.value = restToAdd;
+            beat.subDivisions.push({ type: 'rest', value: restToAdd });
+            beat.subDivisions.push({ type: 'note', value: rhythm.startingValue });
+          } else {
+            beat.value = rhythm.startingValue;
+            beat.subDivisions.push({ type: 'note', value: rhythm.startingValue });
+          }
+        } else {
+          beat.value = rhythm.startingValue;
+          beat.subDivisions.push({ type: 'rest', value: rhythm.startingValue });
+        }
+        addBeatToMeasure(beat, measure, formattedRhythm);
+        beat = {
+          value: 0,
+          subDivisions: [],
+        };
+        continue;
+      }
+
       if (beat.value === 0 && !nonNotes.includes(rhythm.noteValue)) {
         beat.value = rhythm.noteValue;
         beat.subDivisions.push({ type: 'note', value: rhythm.noteValue });
@@ -156,7 +188,7 @@ export default function NoteViewer({
         case 3:
           return dottedHalfNote;
         case 2:
-          return halfNote;
+          return noteType === 'note' ? halfNote : halfRest;
         case 1.5:
           return dottedQuarterNote;
         case 1:
@@ -207,6 +239,8 @@ export default function NoteViewer({
       switch(rhythm) {
         case '8-8':
           return Two8ths;
+        case '8r-8r':
+          return quarterRest;
         case '16-16-16-16':
           return Four16ths;
         case '16r-16-16-16':
@@ -243,6 +277,7 @@ export default function NoteViewer({
     }
 
     const formattedImages = rhythmList => {
+      console.log(rhythmList);
       const formattedRhythmList = formatRhythm(rhythmList);
       console.log(formattedRhythmList);
       return formattedRhythmList.map((measure, m_index) => {

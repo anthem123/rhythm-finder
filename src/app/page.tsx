@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
 import metronomeUtil from './metronome/metronome-util'
 import Footer from './footer';
+import CountDown from './count-down';
 
 export default function Home() {
   const playIcon = <FontAwesomeIcon icon={faPlay} />;
@@ -16,6 +17,7 @@ export default function Home() {
 
   const [beatValue, setBeatValue] = useState(1);
   const [beatCount, setBeatCount] = useState(4);
+  const [startTime, setStartTime]= useState(0);
   const [tempo, setTempo] = useState('100');
   const [rhythm, setRhythm] = useState<any[]>([]);
   const [newRhythm, setNewRhythm] = useState(true);
@@ -31,19 +33,29 @@ export default function Home() {
 
   const addRhythm = () => {
     if (newRhythm) {
+      const currentTime = new Date().getTime();
+      let startingRest = currentTime - startTime - 100;
+      let startingValue;
+      let pickUp = false;
+      if ((Math.abs(startingRest) >= ((60000/parseInt(tempo)) * .25))) {
+          startingValue = getNoteValue(Math.abs(startingRest), parseInt(tempo));
+          if (startingRest < 0) {
+            pickUp = true;
+          }
+      }
       setRhythm([
-        { start: new Date().getTime(), diff: 0, noteValue: 1 }
+        { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: 1 }
       ]);
       setNewRhythm(false);
     } else {
       const newTime = new Date().getTime();
       const prevNote = rhythm[rhythm.length - 1];
-      const diff = newTime - prevNote.start;
+      const diff = newTime - prevNote.noteTime;
       prevNote.diff = diff;
       prevNote.noteValue = getNoteValue(diff, tempo);
       setRhythm([
         ...rhythm,
-        { start: newTime, diff: 0, noteValue: 1 }
+        { noteTime: newTime, diff: 0, noteValue: 1 }
       ]);
     }
   }
@@ -53,16 +65,15 @@ export default function Home() {
       setMetronomeOn(false);
       setMetronomeText(playIcon);
       setNewRhythm(true);
+
+      metronomeUtil.stop();
     } else {
       setMetronomeOn(true);
       setMetronomeText(pauseIcon);
-    }
-  }
 
-  if (metronomeOn) {
-    metronomeUtil.play(tempo);
-  } else {
-    metronomeUtil.stop();
+      const starting = metronomeUtil.play(tempo);
+      setStartTime(starting);
+    }
   }
 
   const onMetModalSelect = () => {
@@ -82,6 +93,10 @@ export default function Home() {
         toggleMetronome={toggleMetronome}
         displayMetModal={displayMetModal}
         onClose={onMetModalSelect}
+      />
+      <CountDown 
+        metronomeOn={metronomeOn}
+        tempo={tempo}
       />
       <NoteViewer
         rhythmList={rhythm}
