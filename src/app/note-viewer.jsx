@@ -75,34 +75,39 @@ export default function NoteViewer({
     };
     for (const rhythm of rhythmList) {
 
+      // If we have a value before or after the end of the countdown
       if (rhythm.startingValue && rhythm.startingValue > 0) {
-
+        // If the value is before the end of the count down
         if (rhythm.pickUp) {
-          console.log('Start Pick up');
           let restToAdd = maxBeatCount - rhythm.startingValue;
-          console.log(restToAdd);
+          // Add full rests until we reach the note
           while (restToAdd >= maxBeatValue) {
-            console.log(restToAdd);
             addSubDivisionToMeasure({ value: maxBeatValue, type: 'rest' }, measure, formattedRhythm);
             restToAdd -= maxBeatValue;
           }
+          const noteValue = rhythm.diff !== 0 ? rhythm.noteValue : rhythm.startingValue;
+          // If we have any extra rests, add them here then the note. Or just add the note
           if (restToAdd > 0) {
-            beat.value = restToAdd;
+            beat.value = restToAdd + noteValue;
             beat.subDivisions.push({ type: 'rest', value: restToAdd });
-            beat.subDivisions.push({ type: 'note', value: rhythm.startingValue });
+            beat.subDivisions.push({ type: 'note', value: noteValue });
           } else {
-            beat.value = rhythm.startingValue;
-            beat.subDivisions.push({ type: 'note', value: rhythm.startingValue });
+            beat.value = noteValue;
+            beat.subDivisions.push({ type: 'note', value: noteValue });
           }
+        // If the starting note is after the end, add the rest first
         } else {
           beat.value = rhythm.startingValue;
           beat.subDivisions.push({ type: 'rest', value: rhythm.startingValue });
+          beat.subDivisions.push({ type: 'note', value: rhythm.noteValue })
         }
-        addBeatToMeasure(beat, measure, formattedRhythm);
-        beat = {
-          value: 0,
-          subDivisions: [],
-        };
+        if (beat.value % maxBeatValue === 0) {
+          addBeatToMeasure(beat, measure, formattedRhythm);
+          beat = {
+            value: 0,
+            subDivisions: [],
+          };
+        }
         continue;
       }
 
@@ -241,6 +246,8 @@ export default function NoteViewer({
           return Two8ths;
         case '8r-8r':
           return quarterRest;
+        case '8-8r':
+          return quarterNote;
         case '16-16-16-16':
           return Four16ths;
         case '16r-16-16-16':
