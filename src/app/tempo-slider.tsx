@@ -1,5 +1,3 @@
-import metronome from './metronome/metronome-util'
-
 export default function TempoSlider({
   tempo,
   setTempo,
@@ -7,7 +5,7 @@ export default function TempoSlider({
   toggleMetronome
 }) {
 
-  const changeTempo = tempo => {
+  const changeTempo = (tempo: number) => {
     if (metronomeOn) {
       toggleMetronome();
     }
@@ -38,7 +36,7 @@ export default function TempoSlider({
         min={min}
         max={max}
         onChange={(e) => {
-          changeTempo(e.target.value);
+          changeTempo(Number(e.target.value));
         }}
         style={getBackgroundSize()}
         value={tempo}

@@ -49,6 +49,7 @@ body {
   flex-flow: row wrap;
   border-radius: 0.5rem;
   margin-top: 2rem;
+  overflow-y: scroll
 }
 
 .measure {

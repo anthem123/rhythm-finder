@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Metronome from './metronome-view';
+import MetronomeView from './metronome-view';
 import MetronomeSelecter from './metronome-selecter';
 import NoteViewer from './note-viewer';
 import { getNoteValue } from './utils/beat-calc'
@@ -86,7 +86,7 @@ export default function Home() {
         tempo={tempo}
         onSelect={onMetModalSelect}
       />
-      <Metronome
+      <MetronomeView
         tempo={tempo}
         setTempo={setTempo}
         metronomeOn={metronomeOn}

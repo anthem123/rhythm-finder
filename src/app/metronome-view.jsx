@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import TempoSlider from './tempo-slider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import PropTypes from 'prop-types'; 
 
-export default function Metronome({
+export default function MetronomeView({
   tempo,
   setTempo,
   metronomeOn,
@@ -33,3 +34,12 @@ export default function Metronome({
       </div>
     )
   }
+
+MetronomeView.propTypes = { 
+  tempo: PropTypes.string.isRequired,
+  setTempo: PropTypes.func.isRequired,
+  metronomeOn: PropTypes.bool.isRequired,
+  toggleMetronome: PropTypes.func.isRequired,
+  displayMetModal: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired
+}; 

@@ -99,4 +99,6 @@ const init = basePath => {
   }
 }
 
-export default { init, play, stop }
+const metronomeUtil = { init, play, stop }
+
+export default metronomeUtil;
