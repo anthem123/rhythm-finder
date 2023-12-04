@@ -17,3 +17,9 @@ export default function NoteViewer({
       </div>
     )
   }
+
+NoteViewer.propTypes = { 
+  rhythmList: PropTypes.array.isRequired,
+  maxBeatCount: PropTypes.number.isRequired,
+  maxBeatValue: PropTypes.number.isRequired
+}; 
