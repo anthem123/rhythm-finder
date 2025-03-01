@@ -22,7 +22,7 @@ export default function TempoSlider({
   const min = 40;
   const max = 220;
   const getBackgroundSize = () => {
-    return { 
+    return {
       backgroundSize: `${((parseInt(tempo) - 40) * 100) / (max - min)}% 100%`,
       maxWidth: '8rem',
     };

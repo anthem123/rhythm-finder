@@ -63,7 +63,7 @@ const noteStyleMappinig = (noteValue, noteType, rhythmCombo) => {
       };
     case 2:
       return {
-        'margin-right': '25px',
+        marginRight: '25px',
         height: 'auto',
         width: 'auto'
       };
@@ -84,7 +84,7 @@ const noteStyleMappinig = (noteValue, noteType, rhythmCombo) => {
 }
 
 const rhythmMapping = rhythm => {
-  switch(rhythm) {
+  switch (rhythm) {
     case '8-8':
       return Two8ths;
     case '8r-8r':

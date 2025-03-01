@@ -2,8 +2,15 @@
   max-width: 16rem;
 }
 
+
 input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
+  /* Add vendor prefixes for older browsers */
+  -moz-appearance: none;
+  /* For Firefox */
+  -ms-appearance: none;
+  /* For Internet Explorer */
   height: 7px;
   background: #808080;
   border-radius: 5px;

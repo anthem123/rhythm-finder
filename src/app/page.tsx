@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import MetronomeView from './metronome-view';
 import MetronomeSelecter from './metronome-selecter';
 import NoteViewer from './note-viewer';
+import NoteViewerNew from './note-viewer-new';
 import { getNoteValue } from './utils/beat-calc'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -17,7 +18,7 @@ export default function Home() {
 
   const [beatValue, setBeatValue] = useState(1);
   const [beatCount, setBeatCount] = useState(4);
-  const [startTime, setStartTime]= useState(0);
+  const [startTime, setStartTime] = useState(0);
   const [tempo, setTempo] = useState('100');
   const [rhythm, setRhythm] = useState<any[]>([]);
   const [newRhythm, setNewRhythm] = useState(true);
@@ -37,11 +38,11 @@ export default function Home() {
       let startingRest = currentTime - startTime - 100;
       let startingValue;
       let pickUp = false;
-      if ((Math.abs(startingRest) >= ((60000/parseInt(tempo)) * .25))) {
-          startingValue = getNoteValue(Math.abs(startingRest), parseInt(tempo));
-          if (startingRest < 0) {
-            pickUp = true;
-          }
+      if ((Math.abs(startingRest) >= ((60000 / parseInt(tempo)) * .25))) {
+        startingValue = getNoteValue(Math.abs(startingRest), parseInt(tempo));
+        if (startingRest < 0) {
+          pickUp = true;
+        }
       }
       setRhythm([
         { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: 1 }
@@ -82,7 +83,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
-      <MetronomeSelecter 
+      <MetronomeSelecter
         tempo={tempo}
         onSelect={onMetModalSelect}
       />
@@ -94,16 +95,21 @@ export default function Home() {
         displayMetModal={displayMetModal}
         onClose={onMetModalSelect}
       />
-      <CountDown 
+      <CountDown
         metronomeOn={metronomeOn}
         tempo={tempo}
       />
+      {/* <NoteViewerNew 
+        rhythmList={rhythm}
+        maxBeatCount={beatCount}
+        maxBeatValue={beatValue}
+      /> */}
       <NoteViewer
         rhythmList={rhythm}
         maxBeatCount={beatCount}
         maxBeatValue={beatValue}
       />
-      <Footer 
+      <Footer
         tempo={tempo}
         metronomeText={metronomeText}
         metronomeOn={metronomeOn}

@@ -26,7 +26,7 @@ const addBeatToMeasure = (musicInfo, maxBeatValue, maxBeatCount) => {
   } else {
     measure.push(JSON.parse(JSON.stringify(beat)))
   }
-  
+
   if (getBeatCount(measure) === maxBeatValue * maxBeatCount) {
     musicInfo.fullScore.push(JSON.parse(JSON.stringify(measure)));
     measure.length = 0;
@@ -44,7 +44,7 @@ const addSubDivisionToBeat = (
 ) => {
   const beat = musicInfo.beat;
   const currentBeatValue = getBeatCount(musicInfo.beat.subDivisions);
-  if (currentBeatValue + subdivision.value <= maxBeatValue) {
+  if (currentBeatValue + subdivision.value <= maxBeatCount) {
     beat.value += subdivision.value;
     beat.subDivisions.push(JSON.parse(JSON.stringify(subdivision)));
     if (beat.value === maxBeatValue) {

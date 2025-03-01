@@ -10,7 +10,7 @@ export default function CountDown({
     if (metronomeOn && countDown < 5) {
       const interval = setInterval(() => {
         setCountDown(countDown + 1);
-      }, 60000/tempo);
+      }, 60000 / tempo);
 
       return () => clearInterval(interval);
     }
@@ -41,5 +41,5 @@ export default function CountDown({
     setCountDown(1);
   }
   return null;
-  
+
 }

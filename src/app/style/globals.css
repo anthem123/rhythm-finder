@@ -72,26 +72,6 @@ footer {
   margin: auto;
 }
 
-/*@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 40, 40, 40;
-    --background-end-rgb: 20, 20, 20;
-  }
-  
-  .clickable-button {
-    border: 1px white solid;
-  }
-
-  .clickable-button:hover {
-    background-color: #555555;
-  }
-
-  .tempo-input {
-    background-color: #555555;
-  }
-}*/
-
 @keyframes pulse {
 	0% {
 		transform: scale(0.95);
