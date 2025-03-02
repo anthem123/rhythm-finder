@@ -41,59 +41,46 @@ export default function NoteViewer({
     const context = renderer.getContext();
     context.setFont("Arial", 10, "").setBackgroundFillStyle("#fff");
 
-    // Create a stave
-    const stave = new Stave(10, 40, 300);
-    stave.addTimeSignature("4/4");
-    stave.setContext(context).draw();
+    // // Create a stave
+    // const stave = new Stave(10, 40, 300);
+    // stave.addTimeSignature("4/4");
+    // stave.setContext(context).draw();
 
     const formattedRhythm = formatRhythm(rhythmList, maxBeatValue, maxBeatCount);
     const measureCount = formattedRhythm.length;
     console.log(formattedRhythm);
 
+    // const staves: Array<Stave> = [];
     const allNotes = [];
-    formattedRhythm.forEach(measure => {
-      // @ts-ignore
-      measure.forEach(beat => {
+    for (const measure of formattedRhythm) {
+      // Create a stave
+      const stave: Stave = new Stave(10, 40, 300);
+      stave.addTimeSignature("4/4");
+      stave.setContext(context).draw();
+      // staves.push(stave as Stave);
+      // Gather notes for measure
+      const measureNotes: Array<StaveNote> = [];
+      for (const beat of measure) {
         if (beat.subDivisions) {
-          beat.subDivisions.forEach(subDivision => {
-            // @ts-ignore
-            allNotes.push(new StaveNote({
+          for (const subDivision of beat.subDivisions) {
+            measureNotes.push(new StaveNote({
               keys: ["f/4"],
               duration: convertValueToVexValue(subDivision.value, subDivision.type),
             }))
-          })
+          }
         } else {
-          // @ts-ignore
-          allNotes.push(new StaveNote({
+          measureNotes.push(new StaveNote({
             keys: ["f/4"],
             duration: convertValueToVexValue(beat.value, beat.type),
           }))
         }
-      });
-    });
-
-    console.log(allNotes)
-
-    // Create notes
-    const notes = [
-      new StaveNote({ keys: ["f/4"], duration: "q" }),
-      new StaveNote({ keys: ["f/4"], duration: "q" }),
-      new StaveNote({ keys: ["f/4"], duration: "q" }),
-      new StaveNote({ keys: ["f/4"], duration: "q" }),
-    ];
-
-    if (allNotes.length === 0) {
-      return;
-    }
-    // Create a voice in 4/4 and add the notes
-    const voice = new Voice({ num_beats: 4, beat_value: 4 });
-    voice.addTickables(allNotes);
-
-    // Format and justify the notes to fit in the stave
-    new Formatter().joinVoices([voice]).format([voice], 250);
-
-    // Render the voice
-    voice.draw(context, stave);
+      }
+      // Add notes to stave
+      const voice = new Voice({ num_beats: 4, beat_value: 4 });
+      voice.addTickables(measureNotes);
+      new Formatter().joinVoices([voice]).format([voice], 250);
+      voice.draw(context, stave);
+    };
   }, [rhythmList]);
 
   return <div className='note-viewer' ref={containerRef}></div>;
