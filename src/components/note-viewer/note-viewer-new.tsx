@@ -21,9 +21,9 @@ export default function NoteViewer({
   maxBeatValue
 }) {
 
-  // if (rhythmList.length === 0) {
-  //   return <div></div>
-  // }
+  if (rhythmList.length === 0) {
+    return <div></div>
+  }
 
   const containerRef = useRef(null);
 
@@ -37,25 +37,23 @@ export default function NoteViewer({
 
     // Create a renderer attached to the container
     const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
-    renderer.resize(400, 150);
+    renderer.resize(400, 400);
     const context = renderer.getContext();
     context.setFont("Arial", 10, "").setBackgroundFillStyle("#fff");
-
-    // // Create a stave
-    // const stave = new Stave(10, 40, 300);
-    // stave.addTimeSignature("4/4");
-    // stave.setContext(context).draw();
 
     const formattedRhythm = formatRhythm(rhythmList, maxBeatValue, maxBeatCount);
     const measureCount = formattedRhythm.length;
     console.log(formattedRhythm);
-
-    // const staves: Array<Stave> = [];
-    const allNotes = [];
+    let position = 40;
+    let firstLoop = true;
     for (const measure of formattedRhythm) {
       // Create a stave
-      const stave: Stave = new Stave(10, 40, 300);
-      stave.addTimeSignature("4/4");
+      const stave: Stave = new Stave(10, position, 300);
+      if (firstLoop) {
+        stave.addTimeSignature("4/4");
+        firstLoop = false;
+      }
+      
       stave.setContext(context).draw();
       // staves.push(stave as Stave);
       // Gather notes for measure
@@ -80,6 +78,8 @@ export default function NoteViewer({
       voice.addTickables(measureNotes);
       new Formatter().joinVoices([voice]).format([voice], 250);
       voice.draw(context, stave);
+
+      position += 50;
     };
   }, [rhythmList]);
 
