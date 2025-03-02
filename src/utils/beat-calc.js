@@ -18,18 +18,41 @@ const getBeatCount = (measure) => {
   return value;
 };
 
+const addMeasureToFullScore = (measure, fullScore) => {
+  fullScore.push(JSON.parse(JSON.stringify(measure)));
+  measure.length = 0;
+}
+
 const addBeatToMeasure = (musicInfo, maxBeatValue, maxBeatCount) => {
   const { beat, measure } = musicInfo;
   checkBeatCombo(beat);
+  const measureMaxCounts = maxBeatValue * maxBeatCount;
+  // If not a rhythm combo add each individual note
   if (beat.rhythmCombo == undefined) {
-    beat.subDivisions.forEach(sub => measure.push(JSON.parse(JSON.stringify(sub))));
+    const currentMeasureCount = getBeatCount(measure);
+    const newBeatCount = getBeatCount(beat.subDivisions);
+    // If next beat is too large, 
+    if (currentMeasureCount + newBeatCount > measureMaxCounts) {
+      const noteValueToAdd = measureMaxCounts - currentMeasureCount;
+      // add remaing note value to current measure
+      measure.push({ type: 'note', value: noteValueToAdd });
+      addMeasureToFullScore(measure, musicInfo.fullScore);
+    // and add rests to the next measure
+      let remaining = newBeatCount - noteValueToAdd;
+      while (remaining > 0) {
+        measure.push({ type: 'rest', value: maxBeatValue });
+        remaining -= maxBeatValue;
+      }
+    } else {
+      beat.subDivisions.forEach(sub => measure.push(JSON.parse(JSON.stringify(sub))));
+    }
   } else {
     measure.push(JSON.parse(JSON.stringify(beat)))
   }
 
-  if (getBeatCount(measure) === maxBeatValue * maxBeatCount) {
-    musicInfo.fullScore.push(JSON.parse(JSON.stringify(measure)));
-    measure.length = 0;
+  // If current measure is full, add it to the full score
+  if (getBeatCount(measure) === measureMaxCounts) {
+    addMeasureToFullScore(measure, musicInfo.fullScore);
   }
   beat.subDivisions.length = 0;
   beat.value = 0;
