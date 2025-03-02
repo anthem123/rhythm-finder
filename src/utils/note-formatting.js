@@ -1,31 +1,31 @@
 import Image from 'next/image'
 
-import wholeNote from '../images/note/whole.png'
-import dottedHalfNote from '../images/note/dotted-half.png'
-import halfNote from '../images/note/half.png'
-import dottedQuarterNote from '../images/note/dotted-quarter.png'
-import quarterNote from '../images/note/quarter.png'
-import dottedEighthNote from '../images/note/dotted-eighth.png'
-import eighthNote from '../images/note/eighth.png'
-import sixteenthNote from '../images/note/sixteenth.png'
+import wholeNote from '../app/images/note/whole.png';
+import dottedHalfNote from '../app/images/note/dotted-half.png'
+import halfNote from '../app/images/note/half.png'
+import dottedQuarterNote from '../app/images/note/dotted-quarter.png'
+import quarterNote from '../app/images/note/quarter.png'
+import dottedEighthNote from '../app/images/note/dotted-eighth.png'
+import eighthNote from '../app/images/note/eighth.png'
+import sixteenthNote from '../app/images/note/sixteenth.png'
 
-import sixteenthRest from '../images/rest/sixteenth.png'
-import eighthRest from '../images/rest/eighth.png'
-import dottedEighthRest from '../images/rest/dotted-eighth.png'
-import quarterRest from '../images/rest/quarter.png'
-import halfRest from '../images/rest/half.png'
+import sixteenthRest from '../app/images/rest/sixteenth.png'
+import eighthRest from '../app/images/rest/eighth.png'
+import dottedEighthRest from '../app/images/rest/dotted-eighth.png'
+import quarterRest from '../app/images/rest/quarter.png'
+import halfRest from '../app/images/rest/half.png'
 
-import Two8ths from '../images/rhythm/8-8.png'
-import Four16ths from '../images/rhythm/16-16-16-16.png'
-import One8thTwo16ths from '../images/rhythm/8-16-16.png'
-import One8thRestTwo16ths from '../images/rhythm/8r-16-16.png'
-import Two16thsOne8th from '../images/rhythm/16-16-8.png'
-import One16thOne8thOne16th from '../images/rhythm/16-8-16.png'
-import Dotted8th16th from '../images/rhythm/8d-16.png'
-import One16thDotted8th from '../images/rhythm/16-8d.png'
-import One16thRestThree16ths from '../images/rhythm/16r-16-16-16.png'
-import One16thRestOne16thRepeat from '../images/rhythm/16r-8-16.png'
-import One16thRestOne16thOne8th from '../images/rhythm/16r-16-8.png'
+import Two8ths from '../app/images/rhythm/8-8.png'
+import Four16ths from '../app/images/rhythm/16-16-16-16.png'
+import One8thTwo16ths from '../app/images/rhythm/8-16-16.png'
+import One8thRestTwo16ths from '../app/images/rhythm/8r-16-16.png'
+import Two16thsOne8th from '../app/images/rhythm/16-16-8.png'
+import One16thOne8thOne16th from '../app/images/rhythm/16-8-16.png'
+import Dotted8th16th from '../app/images/rhythm/8d-16.png'
+import One16thDotted8th from '../app/images/rhythm/16-8d.png'
+import One16thRestThree16ths from '../app/images/rhythm/16r-16-16-16.png'
+import One16thRestOne16thRepeat from '../app/images/rhythm/16r-8-16.png'
+import One16thRestOne16thOne8th from '../app/images/rhythm/16r-16-8.png'
 
 import { formatRhythm } from './beat-calc'
 
@@ -130,9 +130,9 @@ const widthMapping = rhythm => {
 }
 
 export const formattedImages = (rhythmList, maxBeatValue, maxBeatCount) => {
-  console.log(rhythmList);
+  // console.log(rhythmList);
   const formattedRhythmList = formatRhythm(rhythmList, maxBeatValue, maxBeatCount);
-  console.log(formattedRhythmList);
+  // console.log(formattedRhythmList);
   return formattedRhythmList.map((measure, m_index) => {
     return <div key={`measure-${m_index}`} className='measure'>
       {measure.filter(note => note.value > 0).map((note, index) => {

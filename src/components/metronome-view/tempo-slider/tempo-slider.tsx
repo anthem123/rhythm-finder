@@ -1,3 +1,5 @@
+import './slider.css';
+
 export default function TempoSlider({
   tempo,
   setTempo,

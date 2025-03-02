@@ -1,16 +1,16 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import MetronomeView from './metronome-view';
-import MetronomeSelecter from './metronome-selecter';
-import NoteViewer from './note-viewer';
-import NoteViewerNew from './note-viewer-new';
-import { getNoteValue } from './utils/beat-calc'
+import MetronomeView from '../components/metronome-view/metronome-view';
+import MetronomeSelecter from '../components/metronome-selector/metronome-selecter';
+import NoteViewer from '../components/note-viewer/note-viewer';
+import NoteViewerNew from '../components/note-viewer/note-viewer-new';
+import { getNoteValue } from '../utils/beat-calc'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
-import metronomeUtil from './metronome/metronome-util'
-import Footer from './footer';
-import CountDown from './count-down';
+import metronomeUtil from '../metronome/metronome-util'
+import Footer from '../components/footer/footer';
+import CountDown from '../components/count-down/count-down';
 
 export default function Home() {
   const playIcon = <FontAwesomeIcon icon={faPlay} />;

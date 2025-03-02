@@ -1,5 +1,6 @@
+import './metronome-view.css';
 import React from 'react';
-import TempoSlider from './tempo-slider';
+import TempoSlider from './tempo-slider/tempo-slider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types';
@@ -21,7 +22,7 @@ export default function MetronomeView({
       <div className='tempo-top-bar'>
         <span className='tempo-title'>Set Tempo</span>
         <button onClick={onClose} className='metronome-close-button'>
-          <FontAwesomeIcon icon={faXmark} />
+          <FontAwesomeIcon icon={faXmark} className='metronome-close-button-icon'/>
         </button>
       </div>
       <TempoSlider

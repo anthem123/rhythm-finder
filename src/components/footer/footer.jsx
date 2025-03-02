@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import './footer.css';
+import React from 'react';
 
 export default function Footer({
   tempo,

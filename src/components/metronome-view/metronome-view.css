@@ -17,6 +17,7 @@
 
 .tap-bpm-button:hover {
   background: #4e5789;
+  color: #F0F0F0;
 }
 
 .play-pause-button {
@@ -27,6 +28,11 @@
   width: 4rem;
 }
 
+.play-pause-button:hover {
+  background-color: #4e5789;
+  border: 1px #F0F0F0 solid;
+}
+
 .metronome-close-button {
   position: absolute;
   left: 88%;
@@ -35,6 +41,15 @@
   border-radius: 1rem;
   width: 1.8rem;
   color: gray;
+}
+
+.metronome-close-button:hover {
+  background-color: #4e5789;
+  border: 1px #DDDDDD solid;
+}
+
+.metronome-close-button:hover .metronome-close-button-icon {
+  color: #DDDDDD;
 }
 
 .tempo-top-bar {

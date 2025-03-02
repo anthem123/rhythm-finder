@@ -1,7 +1,4 @@
-import './style/globals.css'
-import './style/slider.css'
-import './style/metronome-selector.css'
-import './style/metronome-view.css'
+import '../style/globals.css'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })

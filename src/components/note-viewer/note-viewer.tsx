@@ -1,5 +1,6 @@
+import './note-viewer.css';
 import PropTypes from 'prop-types';
-import { formattedImages } from './utils/note-formatting'
+import { formattedImages } from '../../utils/note-formatting'
 
 export default function NoteViewer({
   rhythmList,
