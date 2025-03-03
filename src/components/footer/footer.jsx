@@ -1,25 +1,26 @@
-import './footer.css';
-import React from 'react';
+import "./footer.css";
+import React from "react";
 
 export default function Footer({
   tempo,
   metronomeText,
   metronomeOn,
   addRhythm,
-  toggleMetronome
+  toggleMetronome,
 }) {
-
   let msTempo = 0;
   if (tempo) {
     msTempo = 60000 / parseInt(tempo);
   }
 
-  const animationStyle = metronomeOn ? {
-    'WebkitAnimation': `pulse ${msTempo}ms infinite`,
-    'MozAnimation': `pulse ${msTempo}ms infinite`,
-    'OAnimation': `pulse ${msTempo}ms infinite`,
-    'Animation': `pulse ${msTempo}ms infinite`,
-  } : {};
+  const animationStyle = metronomeOn
+    ? {
+        WebkitAnimation: `pulse ${msTempo}ms infinite`,
+        MozAnimation: `pulse ${msTempo}ms infinite`,
+        OAnimation: `pulse ${msTempo}ms infinite`,
+        Animation: `pulse ${msTempo}ms infinite`,
+      }
+    : {};
 
   return (
     <footer>
@@ -31,7 +32,7 @@ export default function Footer({
           Tap Rhythm Here!
         </button>
         <button
-          className='play-pause-button'
+          className="play-pause-button"
           style={animationStyle}
           onClick={toggleMetronome}
         >
@@ -39,5 +40,5 @@ export default function Footer({
         </button>
       </div>
     </footer>
-  )
+  );
 }

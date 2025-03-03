@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import MetronomeView from '../components/metronome-view/metronome-view';
-import MetronomeSelecter from '../components/metronome-selector/metronome-selecter';
-import NoteViewer from '../components/note-viewer/note-viewer';
-import NoteViewerNew from '../components/note-viewer/note-viewer-new';
-import { getNoteValue } from '../utils/beat-calc'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons'
-import metronomeUtil from '../metronome/metronome-util'
-import Footer from '../components/footer/footer';
-import CountDown from '../components/count-down/count-down';
+import React, { useState, useEffect } from "react";
+import MetronomeView from "../components/metronome-view/metronome-view";
+import MetronomeSelecter from "../components/metronome-selector/metronome-selecter";
+import NoteViewer from "../components/note-viewer/note-viewer";
+// import NoteViewerNew from "../components/note-viewer/note-viewer-new";
+import { getNoteValue } from "../utils/beat-calc";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import metronomeUtil from "../metronome/metronome-util";
+import Footer from "../components/footer/footer";
+import CountDown from "../components/count-down/count-down";
 
 export default function Home() {
   const playIcon = <FontAwesomeIcon icon={faPlay} />;
@@ -19,7 +19,7 @@ export default function Home() {
   const [beatValue, setBeatValue] = useState(1);
   const [beatCount, setBeatCount] = useState(4);
   const [startTime, setStartTime] = useState(0);
-  const [tempo, setTempo] = useState('100');
+  const [tempo, setTempo] = useState("100");
   const [rhythm, setRhythm] = useState<any[]>([]);
   const [newRhythm, setNewRhythm] = useState(true);
   const [displayMetModal, setDisplayMetModal] = useState(false);
@@ -28,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     // call api or anything
-    const basePath = process.env.NEXT_PUBLIC_RESOURCE_PATH ?? '/rhythm-finder'
+    const basePath = process.env.NEXT_PUBLIC_RESOURCE_PATH ?? "/rhythm-finder";
     metronomeUtil.init(basePath);
   });
 
@@ -38,14 +38,14 @@ export default function Home() {
       let startingRest = currentTime - startTime - 100;
       let startingValue;
       let pickUp = false;
-      if ((Math.abs(startingRest) >= ((60000 / parseInt(tempo)) * .25))) {
+      if (Math.abs(startingRest) >= (60000 / parseInt(tempo)) * 0.25) {
         startingValue = getNoteValue(Math.abs(startingRest), parseInt(tempo));
         if (startingRest < 0) {
           pickUp = true;
         }
       }
       setRhythm([
-        { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: 1 }
+        { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: 1 },
       ]);
       setNewRhythm(false);
     } else {
@@ -54,12 +54,9 @@ export default function Home() {
       const diff = newTime - prevNote.noteTime;
       prevNote.diff = diff;
       prevNote.noteValue = getNoteValue(diff, tempo);
-      setRhythm([
-        ...rhythm,
-        { noteTime: newTime, diff: 0, noteValue: 1 }
-      ]);
+      setRhythm([...rhythm, { noteTime: newTime, diff: 0, noteValue: 1 }]);
     }
-  }
+  };
 
   const toggleMetronome = () => {
     if (metronomeOn) {
@@ -75,18 +72,15 @@ export default function Home() {
       const starting = metronomeUtil.play(tempo);
       setStartTime(starting);
     }
-  }
+  };
 
   const onMetModalSelect = () => {
     setDisplayMetModal(!displayMetModal);
-  }
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
-      <MetronomeSelecter
-        tempo={tempo}
-        onSelect={onMetModalSelect}
-      />
+      <MetronomeSelecter tempo={tempo} onSelect={onMetModalSelect} />
       <MetronomeView
         tempo={tempo}
         setTempo={setTempo}
@@ -95,10 +89,7 @@ export default function Home() {
         displayMetModal={displayMetModal}
         onClose={onMetModalSelect}
       />
-      <CountDown
-        metronomeOn={metronomeOn}
-        tempo={tempo}
-      />
+      <CountDown metronomeOn={metronomeOn} tempo={tempo} />
       {/* <NoteViewerNew 
         rhythmList={rhythm}
         maxBeatCount={beatCount}
@@ -117,5 +108,5 @@ export default function Home() {
         addRhythm={addRhythm}
       />
     </main>
-  )
+  );
 }

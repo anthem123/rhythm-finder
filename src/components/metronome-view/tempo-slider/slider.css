@@ -2,7 +2,6 @@
   max-width: 16rem;
 }
 
-
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -14,7 +13,7 @@ input[type="range"] {
   height: 7px;
   background: #808080;
   border-radius: 5px;
-  background-image: linear-gradient(#D3D3D3, #D3D3D3);
+  background-image: linear-gradient(#d3d3d3, #d3d3d3);
   background-repeat: no-repeat;
 }
 
@@ -23,7 +22,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #D3D3D3;
+  background: #d3d3d3;
   cursor: pointer;
   box-shadow: 0 0 2px 0 #555;
   transition: background 0.3s ease-in-out;
@@ -42,13 +41,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 input[type="range"]::-webkit-slider-thumb:active {
   box-shadow: #80808050 0px 0px 0px 11px;
-  transition: box-shadow 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+  transition:
+    box-shadow 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
     left 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
     bottom 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .slider-button {
-  border: 1px #D3D3D3 solid;
+  border: 1px #d3d3d3 solid;
   border-radius: 1rem;
   height: 2rem;
   width: 2rem;
@@ -56,6 +56,6 @@ input[type="range"]::-webkit-slider-thumb:active {
 }
 
 .slider-button:hover {
-  color: #F0F0F0;
+  color: #f0f0f0;
   background-color: #4e5789;
 }

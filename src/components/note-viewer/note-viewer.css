@@ -1,8 +1,8 @@
 .note-viewer {
-    background-color: lightgray;
-    padding: 1rem;
-    flex-flow: row wrap;
-    border-radius: 0.5rem;
-    margin-top: 2rem;
-    overflow-y: scroll
-  }
+  background-color: lightgray;
+  padding: 1rem;
+  flex-flow: row wrap;
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+  overflow-y: scroll;
+}
