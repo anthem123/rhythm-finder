@@ -1,10 +1,12 @@
 import "./note-viewer.css";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef } from "react";
-import { Renderer, Stave, StaveNote, Voice, Formatter, Dot } from "vexflow";
+import { Renderer, Stave, StaveNote, Voice, Formatter, Dot, Beam } from "vexflow";
 import { formatRhythm } from "@/utils/beat-calc";
 
-const convertValueToVexValue = (noteValue, noteType) => {
+const dottedValues = [3, 1.5, .75];
+
+const convertValueToVexValue = (noteValue: number, noteType: string) => {
   switch (noteValue) {
     case 4:
       return noteType === "rest" ? "wr" : "w";
@@ -27,12 +29,12 @@ const convertValueToVexValue = (noteValue, noteType) => {
   }
 };
 
-const createStaveNote = (beat) => {
+const createStaveNote = (beat: { value: number; type: any; }) => {
   const staveNote = new StaveNote({
     keys: ["f/4"],
     duration: convertValueToVexValue(beat.value, beat.type),
   });
-  if (beat.value === 0.75) {
+  if (dottedValues.includes(beat.value)) {
     Dot.buildAndAttach([staveNote], { all: true });
   }
   return staveNote;
@@ -60,37 +62,49 @@ export default function NoteViewer({ rhythmList, maxBeatCount, maxBeatValue }) {
       maxBeatValue,
       maxBeatCount,
     );
-    // const measureCount = formattedRhythm.length;
-    console.log(rhythmList);
-    console.log(formattedRhythm);
+
     let position = 40;
     let firstLoop = true;
     for (const measure of formattedRhythm) {
       // Create a stave
       const stave: Stave = new Stave(10, position, 300);
+      stave.addClef("percussion");
       if (firstLoop) {
-        stave.addTimeSignature("4/4");
+        stave.addTimeSignature(`${maxBeatCount}/4`);
         firstLoop = false;
       }
 
       stave.setContext(context).draw();
-      // staves.push(stave as Stave);
+      const beamList: Array<Beam> = [];
+      
       // Gather notes for measure
       const measureNotes: Array<StaveNote> = [];
       for (const beat of measure) {
         if (beat.subDivisions) {
+          const toBeBeamed: Array<StaveNote> = [];
+          
           for (const subDivision of beat.subDivisions) {
-            measureNotes.push(createStaveNote(subDivision));
+            const newNote = createStaveNote(subDivision);
+            measureNotes.push(newNote);
+            if (beat.rhythmCombo) {
+              toBeBeamed.push(newNote);
+            }
+          }
+          if (toBeBeamed.length > 1) {
+            const beams = Beam.generateBeams(toBeBeamed);
+            beams.forEach(something => beamList.push(something));
           }
         } else {
           measureNotes.push(createStaveNote(beat));
         }
       }
       // Add notes to stave
-      const voice = new Voice({ num_beats: 4, beat_value: 4 });
+      const voice = new Voice({ num_beats: maxBeatCount, beat_value: 4 * maxBeatValue });
       voice.addTickables(measureNotes);
-      new Formatter().joinVoices([voice]).format([voice], 250);
+      new Formatter().joinVoices([voice]).format([voice], 200);
       voice.draw(context, stave);
+
+      beamList.forEach(beam => beam.setContext(context).draw());
 
       position += 50;
     }

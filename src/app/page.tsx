@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import MetronomeView from "../components/metronome-view/metronome-view";
 import MetronomeSelecter from "../components/metronome-selector/metronome-selecter";
-import NoteViewer from "../components/note-viewer/note-viewer";
-// import NoteViewerNew from "../components/note-viewer/note-viewer-new";
+// import NoteViewer from "../components/note-viewer/note-viewer";
+import NoteViewerNew from "../components/note-viewer/note-viewer-new";
 import { getNoteValue } from "../utils/beat-calc";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
@@ -90,16 +90,16 @@ export default function Home() {
         onClose={onMetModalSelect}
       />
       <CountDown metronomeOn={metronomeOn} tempo={tempo} />
-      {/* <NoteViewerNew 
-        rhythmList={rhythm}
-        maxBeatCount={beatCount}
-        maxBeatValue={beatValue}
-      /> */}
-      <NoteViewer
+      <NoteViewerNew 
         rhythmList={rhythm}
         maxBeatCount={beatCount}
         maxBeatValue={beatValue}
       />
+      {/* <NoteViewer
+        rhythmList={rhythm}
+        maxBeatCount={beatCount}
+        maxBeatValue={beatValue}
+      /> */}
       <Footer
         tempo={tempo}
         metronomeText={metronomeText}
