@@ -10,12 +10,36 @@ export default function MetronomeView({
   setTempo,
   metronomeOn,
   toggleMetronome,
-  displayMetModal,
   onClose,
 }) {
-  if (!displayMetModal) {
-    return null;
-  }
+
+  const bpmTapTimes: Array<number> = [];
+
+  const handleBpmTap = () => {
+    // Get timestamp in seconds
+    const now = new Date().getTime() / 1000;
+    bpmTapTimes.push(now);
+    // If more than 3 seconds have passed reset the list
+    if (now > bpmTapTimes[bpmTapTimes.length - 1] + 3) {
+      bpmTapTimes.length = 0;
+    }
+
+    // If more than 10 entries have been added remove the first entry
+    if (bpmTapTimes.length > 10) {
+      bpmTapTimes.shift();
+    }
+    if (bpmTapTimes.length >= 2) {
+      // Calculate the differences between each pair of timestamps
+      const diffs: Array<number> = [];
+      for (let i = 1; i < bpmTapTimes.length; i++) {
+        diffs.push((bpmTapTimes[i] - bpmTapTimes[i - 1]));
+      }
+
+      const average = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+
+      setTempo(Math.round(60 / average));
+    }
+  };
 
   return (
     <div className="metronome-holder">
@@ -34,7 +58,7 @@ export default function MetronomeView({
         metronomeOn={metronomeOn}
         toggleMetronome={toggleMetronome}
       />
-      <button className="tap-bpm-button">Tap for Tempo</button>
+      <button className="tap-bpm-button" onClick={handleBpmTap}>Tap for Tempo</button>
     </div>
   );
 }
@@ -44,6 +68,5 @@ MetronomeView.propTypes = {
   setTempo: PropTypes.func.isRequired,
   metronomeOn: PropTypes.bool.isRequired,
   toggleMetronome: PropTypes.func.isRequired,
-  displayMetModal: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };

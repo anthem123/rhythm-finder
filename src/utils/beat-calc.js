@@ -127,6 +127,26 @@ const setPickUp = (maxBeatCount, maxBeatValue, rhythm, musicInfo) => {
   }
 };
 
+const specialFirstMeasure = (rhythm, musicInfo, maxBeatValue, maxBeatCount) => {
+  if (rhythm.pickUp) {
+    setPickUp(maxBeatCount, maxBeatValue, rhythm, musicInfo);
+    // If the starting note is after the end, add the rest first
+  } else {
+    addSubDivisionToBeat(
+      { type: "rest", value: rhythm.startingValue },
+      musicInfo,
+      maxBeatValue,
+      maxBeatCount,
+    );
+    addSubDivisionToBeat(
+      { type: "note", value: rhythm.noteValue },
+      musicInfo,
+      maxBeatValue,
+      maxBeatCount,
+    );
+  }
+};
+
 export const formatRhythm = (rhythmList, maxBeatValue, maxBeatCount) => {
   const musicInfo = {
     fullScore: [],
@@ -140,23 +160,7 @@ export const formatRhythm = (rhythmList, maxBeatValue, maxBeatCount) => {
     // If we have a value before or after the end of the countdown
     if (rhythm.startingValue && rhythm.startingValue > 0) {
       // If the value is before the end of the count down
-      if (rhythm.pickUp) {
-        setPickUp(maxBeatCount, maxBeatValue, rhythm, musicInfo);
-        // If the starting note is after the end, add the rest first
-      } else {
-        addSubDivisionToBeat(
-          { type: "rest", value: rhythm.startingValue },
-          musicInfo,
-          maxBeatValue,
-          maxBeatCount,
-        );
-        addSubDivisionToBeat(
-          { type: "note", value: rhythm.noteValue },
-          musicInfo,
-          maxBeatValue,
-          maxBeatCount,
-        );
-      }
+      specialFirstMeasure(rhythm, musicInfo, maxBeatValue, maxBeatCount);
       continue;
     }
 

@@ -1,10 +1,18 @@
 import "./note-viewer.css";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef } from "react";
-import { Renderer, Stave, StaveNote, Voice, Formatter, Dot, Beam } from "vexflow";
+import {
+  Renderer,
+  Stave,
+  StaveNote,
+  Voice,
+  Formatter,
+  Dot,
+  Beam,
+} from "vexflow";
 import { formatRhythm } from "@/utils/beat-calc";
 
-const dottedValues = [3, 1.5, .375, .75];
+const dottedValues = [3, 1.5, 0.375, 0.75];
 
 const convertValueToVexValue = (noteValue: number, noteType: string) => {
   switch (noteValue) {
@@ -35,9 +43,9 @@ const convertValueToVexValue = (noteValue: number, noteType: string) => {
 
 const convertBeatValueToVexValue = (beatValue: number) => {
   switch (beatValue) {
-    case .25:
+    case 0.25:
       return 16;
-    case .5:
+    case 0.5:
       return 8;
     case 1:
       return 4;
@@ -48,9 +56,9 @@ const convertBeatValueToVexValue = (beatValue: number) => {
     default:
       throw new Error(`Unsupported beat value: ${beatValue}`);
   }
-}
+};
 
-const createStaveNote = (beat: { value: number; type: any; }) => {
+const createStaveNote = (beat: { value: number; type: any }) => {
   const staveNote = new StaveNote({
     keys: ["f/4"],
     duration: convertValueToVexValue(beat.value, beat.type),
@@ -115,19 +123,22 @@ export default function NoteViewer({ rhythmList, maxBeatCount, maxBeatValue }) {
           }
           if (toBeBeamed.length > 1) {
             const beams = Beam.generateBeams(toBeBeamed);
-            beams.forEach(something => beamList.push(something));
+            beams.forEach((something) => beamList.push(something));
           }
         } else {
           measureNotes.push(createStaveNote(beat));
         }
       }
       // Add notes to stave
-      const voice = new Voice({ num_beats: maxBeatCount, beat_value: actualBeatValue });
+      const voice = new Voice({
+        num_beats: maxBeatCount,
+        beat_value: actualBeatValue,
+      });
       voice.addTickables(measureNotes);
       new Formatter().joinVoices([voice]).format([voice], 200);
       voice.draw(context, stave);
 
-      beamList.forEach(beam => beam.setContext(context).draw());
+      beamList.forEach((beam) => beam.setContext(context).draw());
 
       position += 50;
     }

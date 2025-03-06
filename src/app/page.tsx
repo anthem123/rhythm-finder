@@ -45,7 +45,13 @@ export default function Home() {
         }
       }
       setRhythm([
-        { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: beatValue },
+        {
+          noteTime: currentTime,
+          startingValue,
+          pickUp,
+          diff: 0,
+          noteValue: beatValue,
+        },
       ]);
       setNewRhythm(false);
     } else {
@@ -54,7 +60,10 @@ export default function Home() {
       const diff = newTime - prevNote.noteTime;
       prevNote.diff = diff;
       prevNote.noteValue = getNoteValue(diff, tempo) * beatValue;
-      setRhythm([...rhythm, { noteTime: newTime, diff: 0, noteValue: beatValue }]);
+      setRhythm([
+        ...rhythm,
+        { noteTime: newTime, diff: 0, noteValue: beatValue },
+      ]);
     }
   };
 
@@ -81,16 +90,17 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
       <MetronomeSelecter tempo={tempo} onSelect={onMetModalSelect} />
-      <MetronomeView
-        tempo={tempo}
-        setTempo={setTempo}
-        metronomeOn={metronomeOn}
-        toggleMetronome={toggleMetronome}
-        displayMetModal={displayMetModal}
-        onClose={onMetModalSelect}
-      />
+      {displayMetModal && (
+        <MetronomeView
+          tempo={tempo}
+          setTempo={setTempo}
+          metronomeOn={metronomeOn}
+          toggleMetronome={toggleMetronome}
+          onClose={onMetModalSelect}
+        />
+      )}
       <CountDown metronomeOn={metronomeOn} tempo={tempo} />
-      <NoteViewerNew 
+      <NoteViewerNew
         rhythmList={rhythm}
         maxBeatCount={beatCount}
         maxBeatValue={beatValue}

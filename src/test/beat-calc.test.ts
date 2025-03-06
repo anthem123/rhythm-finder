@@ -39,15 +39,26 @@ describe("Creates measures", () => {
   });
 
   it("Eighth notes", () => {
-    const rhythmList = [{ noteValue: .5 }, { noteValue: .5 }, { noteValue: 1 }];
+    const rhythmList = [
+      { noteValue: 0.5 },
+      { noteValue: 0.5 },
+      { noteValue: 1 },
+    ];
     const formattedRhythm = formatRhythm(rhythmList, 1, 4);
     expect(formattedRhythm).toEqual([
       [
-        { value: 1, subDivisions: [{ type: "note", value: 0.5 }, { type: "note", value: 0.5 }], rhythmCombo: "8-8" },
+        {
+          value: 1,
+          subDivisions: [
+            { type: "note", value: 0.5 },
+            { type: "note", value: 0.5 },
+          ],
+          rhythmCombo: "8-8",
+        },
         { type: "note", value: 1 },
         { type: "rest", value: 1 },
-        { type: "rest", value: 1 }
-      ]
+        { type: "rest", value: 1 },
+      ],
     ]);
-  })
+  });
 });
