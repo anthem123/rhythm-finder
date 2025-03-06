@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Dot, Beam } from "vexflow";
 import { formatRhythm } from "@/utils/beat-calc";
 
-const dottedValues = [3, 1.5, .75];
+const dottedValues = [3, 1.5, .375, .75];
 
 const convertValueToVexValue = (noteValue: number, noteType: string) => {
   switch (noteValue) {
@@ -22,12 +22,33 @@ const convertValueToVexValue = (noteValue: number, noteType: string) => {
       return noteType === "rest" ? "8dr" : "8d";
     case 0.5:
       return noteType === "rest" ? "8r" : "8";
+    case 0.375:
+      return noteType === "rest" ? "16dr" : "16d";
     case 0.25:
       return noteType === "rest" ? "16r" : "16";
+    case 0.125:
+      return noteType === "rest" ? "32r" : "32";
     default:
       throw new Error(`Unsupported note value: ${noteValue}`);
   }
 };
+
+const convertBeatValueToVexValue = (beatValue: number) => {
+  switch (beatValue) {
+    case .25:
+      return 16;
+    case .5:
+      return 8;
+    case 1:
+      return 4;
+    case 2:
+      return 2;
+    case 1:
+      return 1;
+    default:
+      throw new Error(`Unsupported beat value: ${beatValue}`);
+  }
+}
 
 const createStaveNote = (beat: { value: number; type: any; }) => {
   const staveNote = new StaveNote({
@@ -63,6 +84,8 @@ export default function NoteViewer({ rhythmList, maxBeatCount, maxBeatValue }) {
       maxBeatCount,
     );
 
+    const actualBeatValue = convertBeatValueToVexValue(maxBeatValue);
+
     let position = 40;
     let firstLoop = true;
     for (const measure of formattedRhythm) {
@@ -70,19 +93,19 @@ export default function NoteViewer({ rhythmList, maxBeatCount, maxBeatValue }) {
       const stave: Stave = new Stave(10, position, 300);
       stave.addClef("percussion");
       if (firstLoop) {
-        stave.addTimeSignature(`${maxBeatCount}/4`);
+        stave.addTimeSignature(`${maxBeatCount}/${actualBeatValue}`);
         firstLoop = false;
       }
 
       stave.setContext(context).draw();
       const beamList: Array<Beam> = [];
-      
+
       // Gather notes for measure
       const measureNotes: Array<StaveNote> = [];
       for (const beat of measure) {
         if (beat.subDivisions) {
           const toBeBeamed: Array<StaveNote> = [];
-          
+
           for (const subDivision of beat.subDivisions) {
             const newNote = createStaveNote(subDivision);
             measureNotes.push(newNote);
@@ -99,7 +122,7 @@ export default function NoteViewer({ rhythmList, maxBeatCount, maxBeatValue }) {
         }
       }
       // Add notes to stave
-      const voice = new Voice({ num_beats: maxBeatCount, beat_value: 4 * maxBeatValue });
+      const voice = new Voice({ num_beats: maxBeatCount, beat_value: actualBeatValue });
       voice.addTickables(measureNotes);
       new Formatter().joinVoices([voice]).format([voice], 200);
       voice.draw(context, stave);

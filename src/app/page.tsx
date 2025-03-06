@@ -45,7 +45,7 @@ export default function Home() {
         }
       }
       setRhythm([
-        { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: 1 },
+        { noteTime: currentTime, startingValue, pickUp, diff: 0, noteValue: beatValue },
       ]);
       setNewRhythm(false);
     } else {
@@ -53,8 +53,8 @@ export default function Home() {
       const prevNote = rhythm[rhythm.length - 1];
       const diff = newTime - prevNote.noteTime;
       prevNote.diff = diff;
-      prevNote.noteValue = getNoteValue(diff, tempo);
-      setRhythm([...rhythm, { noteTime: newTime, diff: 0, noteValue: 1 }]);
+      prevNote.noteValue = getNoteValue(diff, tempo) * beatValue;
+      setRhythm([...rhythm, { noteTime: newTime, diff: 0, noteValue: beatValue }]);
     }
   };
 

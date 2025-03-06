@@ -4,7 +4,7 @@ const notes = [4, 3, 2, 1.5, 1, 0.75, 0.5, 0.25];
 
 export const getNoteValue = (duration, tempo) => {
   if (tempo === undefined) {
-    return null;
+    return 1;
   }
 
   const aproxBeat = (duration * tempo) / 60000;
