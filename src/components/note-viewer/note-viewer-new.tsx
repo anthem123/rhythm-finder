@@ -58,10 +58,10 @@ const convertBeatValueToVexValue = (beatValue: number) => {
   }
 };
 
-const createStaveNote = (beat: { value: number; type: any }) => {
+const createStaveNote = (beat: { value: number; type?: "note" | "rest" }) => {
   const staveNote = new StaveNote({
     keys: ["f/4"],
-    duration: convertValueToVexValue(beat.value, beat.type),
+    duration: convertValueToVexValue(beat.value, beat.type ?? "note"),
   });
   if (dottedValues.includes(beat.value)) {
     Dot.buildAndAttach([staveNote], { all: true });

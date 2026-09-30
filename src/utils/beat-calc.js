@@ -147,13 +147,30 @@ const specialFirstMeasure = (rhythm, musicInfo, maxBeatValue, maxBeatCount) => {
   }
 };
 
+/**
+ * @typedef {{ type: "note" | "rest", value: number }} SubDivision
+ * @typedef {{
+ *   type?: "note" | "rest",
+ *   value: number,
+ *   subDivisions?: SubDivision[],
+ *   rhythmCombo?: string
+ * }} Beat
+ * @typedef {Beat[]} Measure
+ * @typedef {{
+ *   fullScore: Measure[],
+ *   measure: Measure,
+ *   beat: { value: number, subDivisions: SubDivision[], rhythmCombo: string }
+ * }} MusicInfo
+ */
 export const formatRhythm = (rhythmList, maxBeatValue, maxBeatCount) => {
+  /** @type {MusicInfo} */
   const musicInfo = {
     fullScore: [],
     measure: [],
     beat: {
       value: 0,
       subDivisions: [],
+      rhythmCombo: ""
     },
   };
   for (const rhythm of rhythmList) {
